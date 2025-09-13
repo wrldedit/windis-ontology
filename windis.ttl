@@ -1,0 +1,877 @@
+@prefix : <http://example.org/windis#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix windis: <http://example.org/windis#> .
+@base <http://example.org/windis#> .
+
+<http://example.org/windis> rdf:type owl:Ontology ;
+                             rdfs:comment "WinDis models window components, their connections, and disassembly processes. Categorical codes use inline literal enumerations; measured data use a reified Attribute pattern with units and provenance. 'Other' groups condition assessment and circular outcomes."@en ;
+                             rdfs:label "WinDis — Window Disassembly Ontology"@en .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://example.org/windis#basePartComponent
+windis:basePartComponent rdf:type owl:ObjectProperty ;
+                         rdfs:domain windis:Connection ;
+                         rdfs:range windis:Component ;
+                         rdfs:label "basePartComponent"@en .
+
+
+###  http://example.org/windis#basePartWall
+windis:basePartWall rdf:type owl:ObjectProperty ;
+                    rdfs:domain windis:Connection ;
+                    rdfs:range windis:WallOpening ;
+                    rdfs:label "basePartWall"@en .
+
+
+###  http://example.org/windis#fastenedPart
+windis:fastenedPart rdf:type owl:ObjectProperty ;
+                    rdfs:domain windis:Connection ;
+                    rdfs:range windis:Component ;
+                    rdfs:label "fastenedPart"@en .
+
+
+###  http://example.org/windis#hasAssessment
+windis:hasAssessment rdf:type owl:ObjectProperty ;
+                     rdfs:domain owl:Thing ;
+                     rdfs:range windis:ConditionAssessment ;
+                     rdfs:label "hasAssessment"@en .
+
+
+###  http://example.org/windis#hasAttribute
+windis:hasAttribute rdf:type owl:ObjectProperty ;
+                    rdfs:domain owl:Thing ;
+                    rdfs:range windis:Attribute ;
+                    rdfs:label "hasAttribute"@en .
+
+
+###  http://example.org/windis#hasBarrier
+windis:hasBarrier rdf:type owl:ObjectProperty ;
+                  rdfs:domain [ rdf:type owl:Class ;
+                                owl:unionOf ( windis:Component
+                                              windis:FenestrationAssembly
+                                            )
+                              ] ;
+                  rdfs:range windis:ReuseBarrier ;
+                  rdfs:label "hasBarrier"@en .
+
+
+###  http://example.org/windis#hasComponent
+windis:hasComponent rdf:type owl:ObjectProperty ;
+                    owl:inverseOf windis:partOf ;
+                    rdfs:domain [ rdf:type owl:Class ;
+                                  owl:unionOf ( windis:Component
+                                                windis:FenestrationAssembly
+                                              )
+                                ] ;
+                    rdfs:range windis:Component ;
+                    rdfs:label "hasComponent"@en .
+
+
+###  http://example.org/windis#hasConnection
+windis:hasConnection rdf:type owl:ObjectProperty ;
+                     rdfs:domain [ rdf:type owl:Class ;
+                                   owl:unionOf ( windis:Component
+                                                 windis:FenestrationAssembly
+                                               )
+                                 ] ;
+                     rdfs:range windis:Connection ;
+                     rdfs:label "hasConnection"@en .
+
+
+###  http://example.org/windis#hasConstraint
+windis:hasConstraint rdf:type owl:ObjectProperty ;
+                     rdfs:domain [ rdf:type owl:Class ;
+                                   owl:unionOf ( windis:Connection
+                                                 windis:DisassemblyPlan
+                                                 windis:DisassemblyStep
+                                               )
+                                 ] ;
+                     rdfs:range windis:ProcessConstraint ;
+                     rdfs:label "hasConstraint"@en .
+
+
+###  http://example.org/windis#hasDisassemblyPlan
+windis:hasDisassemblyPlan rdf:type owl:ObjectProperty ;
+                          rdfs:domain [ rdf:type owl:Class ;
+                                        owl:unionOf ( windis:Component
+                                                      windis:FenestrationAssembly
+                                                    )
+                                      ] ;
+                          rdfs:range windis:DisassemblyPlan ;
+                          rdfs:label "hasDisassemblyPlan"@en .
+
+
+###  http://example.org/windis#hasNextStep
+windis:hasNextStep rdf:type owl:ObjectProperty ;
+                   rdfs:domain windis:DisassemblyStep ;
+                   rdfs:range windis:DisassemblyStep ;
+                   rdfs:label "hasNextStep"@en .
+
+
+###  http://example.org/windis#hasPrecondition
+windis:hasPrecondition rdf:type owl:ObjectProperty ;
+                       rdfs:domain windis:DisassemblyStep ;
+                       rdfs:range windis:DisassemblyStep ;
+                       rdfs:label "hasPrecondition"@en .
+
+
+###  http://example.org/windis#hasStep
+windis:hasStep rdf:type owl:ObjectProperty ;
+               rdfs:domain windis:DisassemblyPlan ;
+               rdfs:range windis:DisassemblyStep ;
+               rdfs:label "hasStep"@en .
+
+
+###  http://example.org/windis#installedIn
+windis:installedIn rdf:type owl:ObjectProperty ;
+                   rdfs:domain windis:FenestrationAssembly ;
+                   rdfs:range windis:WallOpening ;
+                   rdfs:label "installedIn"@en .
+
+
+###  http://example.org/windis#partOf
+windis:partOf rdf:type owl:ObjectProperty ,
+                       owl:TransitiveProperty ;
+              rdfs:domain windis:Component ;
+              rdfs:range [ rdf:type owl:Class ;
+                           owl:unionOf ( windis:Component
+                                         windis:FenestrationAssembly
+                                       )
+                         ] ;
+              rdfs:label "partOf"@en .
+
+
+###  http://example.org/windis#recommendedEoL
+windis:recommendedEoL rdf:type owl:ObjectProperty ;
+                      rdfs:domain windis:Component ;
+                      rdfs:range windis:EndOfLifeOption ;
+                      rdfs:label "recommendedEoL"@en .
+
+
+###  http://example.org/windis#requiresTool
+windis:requiresTool rdf:type owl:ObjectProperty ;
+                    rdfs:domain windis:Connection ;
+                    rdfs:range windis:ProcessTool ;
+                    rdfs:label "requiresTool"@en .
+
+
+###  http://example.org/windis#targetsComponent
+windis:targetsComponent rdf:type owl:ObjectProperty ;
+                        rdfs:domain windis:DisassemblyStep ;
+                        rdfs:range windis:Component ;
+                        rdfs:label "targetsComponent"@en .
+
+
+###  http://example.org/windis#targetsConnection
+windis:targetsConnection rdf:type owl:ObjectProperty ;
+                         rdfs:domain windis:DisassemblyStep ;
+                         rdfs:range windis:Connection ;
+                         rdfs:label "targetsConnection"@en .
+
+
+###  http://example.org/windis#usesTool
+windis:usesTool rdf:type owl:ObjectProperty ;
+                rdfs:domain windis:DisassemblyStep ;
+                rdfs:range windis:ProcessTool ;
+                rdfs:label "usesTool"@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://example.org/windis#accessSide
+windis:accessSide rdf:type owl:DatatypeProperty ;
+                  rdfs:domain windis:Connection ;
+                  rdfs:range [ rdf:type rdfs:Datatype ;
+                               owl:oneOf [ rdf:type rdf:List ;
+                                           rdf:first "Both" ;
+                                           rdf:rest [ rdf:type rdf:List ;
+                                                      rdf:first "Inside" ;
+                                                      rdf:rest [ rdf:type rdf:List ;
+                                                                 rdf:first "None" ;
+                                                                 rdf:rest [ rdf:type rdf:List ;
+                                                                            rdf:first "Outside" ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ]
+                             ] ;
+                  rdfs:label "accessSide"@en .
+
+
+###  http://example.org/windis#airPermeabilityClass
+windis:airPermeabilityClass rdf:type owl:DatatypeProperty ;
+                            rdfs:domain windis:FenestrationAssembly ;
+                            rdfs:range [ rdf:type rdfs:Datatype ;
+                                         owl:oneOf [ rdf:type rdf:List ;
+                                                     rdf:first "1" ;
+                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                rdf:first "2" ;
+                                                                rdf:rest [ rdf:type rdf:List ;
+                                                                           rdf:first "3" ;
+                                                                           rdf:rest [ rdf:type rdf:List ;
+                                                                                      rdf:first "4" ;
+                                                                                      rdf:rest rdf:nil
+                                                                                    ]
+                                                                         ]
+                                                              ]
+                                                   ]
+                                       ] ;
+                            rdfs:label "airPermeabilityClass"@en .
+
+
+###  http://example.org/windis#assessmentNote
+windis:assessmentNote rdf:type owl:DatatypeProperty ;
+                      rdfs:domain windis:ConditionAssessment ;
+                      rdfs:range xsd:string ;
+                      rdfs:label "assessmentNote"@en .
+
+
+###  http://example.org/windis#connectionLocation
+windis:connectionLocation rdf:type owl:DatatypeProperty ;
+                          rdfs:domain windis:Connection ;
+                          rdfs:range [ rdf:type rdfs:Datatype ;
+                                       owl:oneOf [ rdf:type rdf:List ;
+                                                   rdf:first "Head" ;
+                                                   rdf:rest [ rdf:type rdf:List ;
+                                                              rdf:first "Jamb" ;
+                                                              rdf:rest [ rdf:type rdf:List ;
+                                                                         rdf:first "Mullion" ;
+                                                                         rdf:rest [ rdf:type rdf:List ;
+                                                                                    rdf:first "Sill" ;
+                                                                                    rdf:rest rdf:nil
+                                                                                  ]
+                                                                       ]
+                                                            ]
+                                                 ]
+                                     ] ;
+                          rdfs:label "connectionLocation"@en .
+
+
+###  http://example.org/windis#coverSide
+windis:coverSide rdf:type owl:DatatypeProperty ;
+                 rdfs:domain windis:FenestrationAssembly ;
+                 rdfs:range [ rdf:type rdfs:Datatype ;
+                              owl:oneOf [ rdf:type rdf:List ;
+                                          rdf:first "Both" ;
+                                          rdf:rest [ rdf:type rdf:List ;
+                                                     rdf:first "Inside" ;
+                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                rdf:first "None" ;
+                                                                rdf:rest [ rdf:type rdf:List ;
+                                                                           rdf:first "Outside" ;
+                                                                           rdf:rest rdf:nil
+                                                                         ]
+                                                              ]
+                                                   ]
+                                        ]
+                            ] ;
+                 rdfs:label "coverSide"@en .
+
+
+###  http://example.org/windis#coverage
+windis:coverage rdf:type owl:DatatypeProperty ;
+                rdfs:domain windis:Connection ;
+                rdfs:range [ rdf:type rdfs:Datatype ;
+                             owl:oneOf [ rdf:type rdf:List ;
+                                         rdf:first "Local" ;
+                                         rdf:rest [ rdf:type rdf:List ;
+                                                    rdf:first "Perimeter" ;
+                                                    rdf:rest rdf:nil
+                                                  ]
+                                       ]
+                           ] ;
+                rdfs:label "coverage"@en .
+
+
+###  http://example.org/windis#exposureClass
+windis:exposureClass rdf:type owl:DatatypeProperty ;
+                     rdfs:domain windis:WallOpening ;
+                     rdfs:range xsd:string ;
+                     rdfs:label "exposureClass"@en .
+
+
+###  http://example.org/windis#exteriorAccess
+windis:exteriorAccess rdf:type owl:DatatypeProperty ;
+                      rdfs:domain windis:WallOpening ;
+                      rdfs:range xsd:string ;
+                      rdfs:label "exteriorAccess"@en .
+
+
+###  http://example.org/windis#exteriorReturnPresent
+windis:exteriorReturnPresent rdf:type owl:DatatypeProperty ;
+                             rdfs:domain windis:WallOpening ;
+                             rdfs:range xsd:boolean ;
+                             rdfs:label "exteriorReturnPresent"@en .
+
+
+###  http://example.org/windis#fillKind
+windis:fillKind rdf:type owl:DatatypeProperty ;
+                rdfs:domain windis:GlazingSystem ;
+                rdfs:range [ rdf:type rdfs:Datatype ;
+                             owl:oneOf [ rdf:type rdf:List ;
+                                         rdf:first "Aerogel" ;
+                                         rdf:rest [ rdf:type rdf:List ;
+                                                    rdf:first "Air" ;
+                                                    rdf:rest [ rdf:type rdf:List ;
+                                                               rdf:first "Argon" ;
+                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                          rdf:first "Krypton" ;
+                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                     rdf:first "Vacuum" ;
+                                                                                     rdf:rest rdf:nil
+                                                                                   ]
+                                                                        ]
+                                                             ]
+                                                  ]
+                                       ]
+                           ] ;
+                rdfs:label "fillKind"@en .
+
+
+###  http://example.org/windis#finishType
+windis:finishType rdf:type owl:DatatypeProperty ;
+                  rdfs:domain windis:Component ;
+                  rdfs:range [ rdf:type rdfs:Datatype ;
+                               owl:oneOf [ rdf:type rdf:List ;
+                                           rdf:first "Anodized" ;
+                                           rdf:rest [ rdf:type rdf:List ;
+                                                      rdf:first "FoilLaminate" ;
+                                                      rdf:rest [ rdf:type rdf:List ;
+                                                                 rdf:first "Paint" ;
+                                                                 rdf:rest [ rdf:type rdf:List ;
+                                                                            rdf:first "PowderCoated" ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ]
+                             ] ;
+                  rdfs:label "finishType"@en .
+
+
+###  http://example.org/windis#hasCoverOverlap
+windis:hasCoverOverlap rdf:type owl:DatatypeProperty ;
+                       rdfs:domain windis:FenestrationAssembly ;
+                       rdfs:range xsd:boolean ;
+                       rdfs:label "hasCoverOverlap"@en .
+
+
+###  http://example.org/windis#hasTextValue
+windis:hasTextValue rdf:type owl:DatatypeProperty ;
+                    rdfs:domain windis:Attribute ;
+                    rdfs:range xsd:string ;
+                    rdfs:label "hasTextValue"@en .
+
+
+###  http://example.org/windis#hasUnit
+windis:hasUnit rdf:type owl:DatatypeProperty ;
+               rdfs:domain windis:Attribute ;
+               rdfs:range xsd:string ;
+               rdfs:label "hasUnit"@en .
+
+
+###  http://example.org/windis#hasValue
+windis:hasValue rdf:type owl:DatatypeProperty ;
+                rdfs:domain windis:Attribute ;
+                rdfs:range xsd:double ;
+                rdfs:label "hasValue"@en .
+
+
+###  http://example.org/windis#hazardousOverall
+windis:hazardousOverall rdf:type owl:DatatypeProperty ;
+                        rdfs:domain windis:Component ;
+                        rdfs:range xsd:boolean ;
+                        rdfs:label "hazardousOverall"@en .
+
+
+###  http://example.org/windis#interiorAccess
+windis:interiorAccess rdf:type owl:DatatypeProperty ;
+                      rdfs:domain windis:WallOpening ;
+                      rdfs:range xsd:boolean ;
+                      rdfs:label "interiorAccess"@en .
+
+
+###  http://example.org/windis#interiorReturnPresent
+windis:interiorReturnPresent rdf:type owl:DatatypeProperty ;
+                             rdfs:domain windis:WallOpening ;
+                             rdfs:range xsd:boolean ;
+                             rdfs:label "interiorReturnPresent"@en .
+
+
+###  http://example.org/windis#isServiceableAsUnit
+windis:isServiceableAsUnit rdf:type owl:DatatypeProperty ;
+                           rdfs:domain windis:GlazingSystem ;
+                           rdfs:range xsd:boolean ;
+                           rdfs:label "isServiceableAsUnit"@en .
+
+
+###  http://example.org/windis#lintelPresent
+windis:lintelPresent rdf:type owl:DatatypeProperty ;
+                     rdfs:domain windis:WallOpening ;
+                     rdfs:range xsd:boolean ;
+                     rdfs:label "lintelPresent"@en .
+
+
+###  http://example.org/windis#materialKind
+windis:materialKind rdf:type owl:DatatypeProperty ;
+                    rdfs:domain windis:Component ;
+                    rdfs:range [ rdf:type rdfs:Datatype ;
+                                 owl:oneOf [ rdf:type rdf:List ;
+                                             rdf:first "Aluminum" ;
+                                             rdf:rest [ rdf:type rdf:List ;
+                                                        rdf:first "Glass" ;
+                                                        rdf:rest [ rdf:type rdf:List ;
+                                                                   rdf:first "PVC" ;
+                                                                   rdf:rest [ rdf:type rdf:List ;
+                                                                              rdf:first "Steel" ;
+                                                                              rdf:rest [ rdf:type rdf:List ;
+                                                                                         rdf:first "Timber" ;
+                                                                                         rdf:rest rdf:nil
+                                                                                       ]
+                                                                            ]
+                                                                 ]
+                                                      ]
+                                           ]
+                               ] ;
+                    rdfs:label "materialKind"@en .
+
+
+###  http://example.org/windis#observedAt
+windis:observedAt rdf:type owl:DatatypeProperty ;
+                  rdfs:domain windis:Attribute ;
+                  rdfs:range xsd:dateTime ;
+                  rdfs:label "observedAt"@en .
+
+
+###  http://example.org/windis#observedBy
+windis:observedBy rdf:type owl:DatatypeProperty ;
+                  rdfs:domain windis:Attribute ;
+                  rdfs:range xsd:string ;
+                  rdfs:label "observedBy"@en .
+
+
+###  http://example.org/windis#orientation
+windis:orientation rdf:type owl:DatatypeProperty ;
+                   rdfs:domain windis:WallOpening ;
+                   rdfs:range xsd:string ;
+                   rdfs:label "orientation"@en .
+
+
+###  http://example.org/windis#residueRisk
+windis:residueRisk rdf:type owl:DatatypeProperty ;
+                   rdfs:domain windis:Connection ;
+                   rdfs:range [ rdf:type rdfs:Datatype ;
+                                owl:oneOf [ rdf:type rdf:List ;
+                                            rdf:first "High" ;
+                                            rdf:rest [ rdf:type rdf:List ;
+                                                       rdf:first "Low" ;
+                                                       rdf:rest [ rdf:type rdf:List ;
+                                                                  rdf:first "None" ;
+                                                                  rdf:rest rdf:nil
+                                                                ]
+                                                     ]
+                                          ]
+                              ] ;
+                   rdfs:label "residueRisk"@en .
+
+
+###  http://example.org/windis#reversibility
+windis:reversibility rdf:type owl:DatatypeProperty ;
+                     rdfs:domain windis:Connection ;
+                     rdfs:range [ rdf:type rdfs:Datatype ;
+                                  owl:oneOf [ rdf:type rdf:List ;
+                                              rdf:first "Destructive" ;
+                                              rdf:rest [ rdf:type rdf:List ;
+                                                         rdf:first "Reversible" ;
+                                                         rdf:rest [ rdf:type rdf:List ;
+                                                                    rdf:first "Semi" ;
+                                                                    rdf:rest rdf:nil
+                                                                  ]
+                                                       ]
+                                            ]
+                                ] ;
+                     rdfs:label "reversibility"@en .
+
+
+###  http://example.org/windis#sequenceNumber
+windis:sequenceNumber rdf:type owl:DatatypeProperty ;
+                      rdfs:domain windis:DisassemblyStep ;
+                      rdfs:range xsd:int ;
+                      rdfs:label "sequenceNumber"@en .
+
+
+###  http://example.org/windis#storey
+windis:storey rdf:type owl:DatatypeProperty ;
+              rdfs:domain windis:WallOpening ;
+              rdfs:range xsd:int ;
+              rdfs:label "storey"@en .
+
+
+###  http://example.org/windis#substancesPresent
+windis:substancesPresent rdf:type owl:DatatypeProperty ;
+                         rdfs:domain windis:Component ;
+                         rdfs:range [ rdf:type rdfs:Datatype ;
+                                      owl:oneOf [ rdf:type rdf:List ;
+                                                  rdf:first "Asbestos" ;
+                                                  rdf:rest [ rdf:type rdf:List ;
+                                                             rdf:first "Lead" ;
+                                                             rdf:rest [ rdf:type rdf:List ;
+                                                                        rdf:first "PCB" ;
+                                                                        rdf:rest rdf:nil
+                                                                      ]
+                                                           ]
+                                                ]
+                                    ] ;
+                         rdfs:label "substancesPresent"@en .
+
+
+###  http://example.org/windis#watertightnessClass
+windis:watertightnessClass rdf:type owl:DatatypeProperty ;
+                           rdfs:domain windis:FenestrationAssembly ;
+                           rdfs:range [ rdf:type rdfs:Datatype ;
+                                        owl:oneOf [ rdf:type rdf:List ;
+                                                    rdf:first "1A" ;
+                                                    rdf:rest [ rdf:type rdf:List ;
+                                                               rdf:first "2A" ;
+                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                          rdf:first "3A" ;
+                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                     rdf:first "4A" ;
+                                                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                                                rdf:first "5A" ;
+                                                                                                rdf:rest [ rdf:type rdf:List ;
+                                                                                                           rdf:first "6A" ;
+                                                                                                           rdf:rest [ rdf:type rdf:List ;
+                                                                                                                      rdf:first "7A" ;
+                                                                                                                      rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                 rdf:first "8A" ;
+                                                                                                                                 rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                            rdf:first "9A" ;
+                                                                                                                                            rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                                       rdf:first "E" ;
+                                                                                                                                                       rdf:rest rdf:nil
+                                                                                                                                                     ]
+                                                                                                                                          ]
+                                                                                                                               ]
+                                                                                                                    ]
+                                                                                                         ]
+                                                                                              ]
+                                                                                   ]
+                                                                        ]
+                                                             ]
+                                                  ]
+                                      ] ;
+                           rdfs:label "watertightnessClass"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://example.org/windis#Attribute
+windis:Attribute rdf:type owl:Class ;
+                 rdfs:comment "Reified measured/declared value with unit and provenance."@en ;
+                 rdfs:label "Attribute"@en .
+
+
+###  http://example.org/windis#Bead
+windis:Bead rdf:type owl:Class ;
+            rdfs:subClassOf windis:RetentionAndSealSystem ;
+            rdfs:label "Bead"@en .
+
+
+###  http://example.org/windis#Component
+windis:Component rdf:type owl:Class ;
+                 rdfs:subClassOf windis:PhysicalElement ;
+                 rdfs:label "Component"@en .
+
+
+###  http://example.org/windis#ConditionAssessment
+windis:ConditionAssessment rdf:type owl:Class ;
+                           rdfs:subClassOf windis:Other ;
+                           rdfs:label "ConditionAssessment"@en .
+
+
+###  http://example.org/windis#Connection
+windis:Connection rdf:type owl:Class ;
+                  rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                    owl:onProperty windis:fastenedPart ;
+                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                    owl:onClass windis:Component
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty windis:basePartComponent ;
+                                    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                    owl:onClass windis:Component
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty windis:basePartWall ;
+                                    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                    owl:onClass windis:WallOpening
+                                  ] ;
+                  rdfs:comment "Relates a base part (component or wall opening) and a fastened part (component). Categorical properties capture access side, reversibility, residue risk, location, and coverage."@en ;
+                  rdfs:label "Connection"@en .
+
+
+###  http://example.org/windis#CutPerimeterFoam
+windis:CutPerimeterFoam rdf:type owl:Class ;
+                        rdfs:subClassOf windis:DisassemblyStep ;
+                        rdfs:label "CutPerimeterFoam"@en .
+
+
+###  http://example.org/windis#DetachSash
+windis:DetachSash rdf:type owl:Class ;
+                  rdfs:subClassOf windis:DisassemblyStep ;
+                  rdfs:label "DetachSash"@en .
+
+
+###  http://example.org/windis#DisassemblyPlan
+windis:DisassemblyPlan rdf:type owl:Class ;
+                       rdfs:subClassOf windis:ProcessModel ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty windis:hasStep ;
+                                         owl:someValuesFrom windis:DisassemblyStep
+                                       ] ;
+                       rdfs:label "DisassemblyPlan"@en .
+
+
+###  http://example.org/windis#DisassemblyStep
+windis:DisassemblyStep rdf:type owl:Class ;
+                       rdfs:subClassOf windis:ProcessModel ;
+                       rdfs:label "DisassemblyStep"@en .
+
+
+###  http://example.org/windis#DurometerAttribute
+windis:DurometerAttribute rdf:type owl:Class ;
+                          rdfs:subClassOf windis:Attribute ;
+                          rdfs:label "DurometerAttribute"@en .
+
+
+###  http://example.org/windis#EndOfLifeOption
+windis:EndOfLifeOption rdf:type owl:Class ;
+                       rdfs:subClassOf windis:Other ;
+                       rdfs:label "EndOfLifeOption"@en .
+
+
+###  http://example.org/windis#ExtractFrame
+windis:ExtractFrame rdf:type owl:Class ;
+                    rdfs:subClassOf windis:DisassemblyStep ;
+                    rdfs:label "ExtractFrame"@en .
+
+
+###  http://example.org/windis#FenestrationAssembly
+windis:FenestrationAssembly rdf:type owl:Class ;
+                            rdfs:subClassOf windis:PhysicalElement ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty windis:hasComponent ;
+                                              owl:someValuesFrom windis:Component
+                                            ] ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty windis:installedIn ;
+                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                              owl:onClass windis:WallOpening
+                                            ] ;
+                            rdfs:label "FenestrationAssembly"@en .
+
+
+###  http://example.org/windis#Frame
+windis:Frame rdf:type owl:Class ;
+             rdfs:subClassOf windis:FrameSystem ;
+             rdfs:label "Frame"@en .
+
+
+###  http://example.org/windis#FrameSystem
+windis:FrameSystem rdf:type owl:Class ;
+                   rdfs:subClassOf windis:Component ;
+                   rdfs:label "FrameSystem"@en .
+
+
+###  http://example.org/windis#Gasket
+windis:Gasket rdf:type owl:Class ;
+              rdfs:subClassOf windis:RetentionAndSealSystem ;
+              rdfs:label "Gasket"@en .
+
+
+###  http://example.org/windis#GlazingCompound
+windis:GlazingCompound rdf:type owl:Class ;
+                       rdfs:subClassOf windis:RetentionAndSealSystem ;
+                       rdfs:label "GlazingCompound"@en .
+
+
+###  http://example.org/windis#GlazingSystem
+windis:GlazingSystem rdf:type owl:Class ;
+                     rdfs:subClassOf windis:Component ;
+                     rdfs:label "GlazingSystem"@en .
+
+
+###  http://example.org/windis#HeightAttribute
+windis:HeightAttribute rdf:type owl:Class ;
+                       rdfs:subClassOf windis:Attribute ;
+                       rdfs:label "HeightAttribute"@en .
+
+
+###  http://example.org/windis#InsulatingGlazingUnit
+windis:InsulatingGlazingUnit rdf:type owl:Class ;
+                             rdfs:subClassOf windis:GlazingSystem ;
+                             rdfs:label "InsulatingGlazingUnit"@en .
+
+
+###  http://example.org/windis#Other
+windis:Other rdf:type owl:Class ;
+             rdfs:comment "Umbrella for condition assessment and circular outcomes."@en ;
+             rdfs:label "Other"@en .
+
+
+###  http://example.org/windis#PhysicalElement
+windis:PhysicalElement rdf:type owl:Class ;
+                       rdfs:label "PhysicalElement"@en .
+
+
+###  http://example.org/windis#ProcessConstraint
+windis:ProcessConstraint rdf:type owl:Class ;
+                         rdfs:subClassOf windis:ProcessModel ;
+                         rdfs:label "ProcessConstraint"@en .
+
+
+###  http://example.org/windis#ProcessModel
+windis:ProcessModel rdf:type owl:Class ;
+                    rdfs:label "ProcessModel"@en .
+
+
+###  http://example.org/windis#ProcessTool
+windis:ProcessTool rdf:type owl:Class ;
+                   rdfs:subClassOf windis:ProcessModel ;
+                   rdfs:label "ProcessTool"@en .
+
+
+###  http://example.org/windis#ReleaseBracketOrScrew
+windis:ReleaseBracketOrScrew rdf:type owl:Class ;
+                             rdfs:subClassOf windis:DisassemblyStep ;
+                             rdfs:label "ReleaseBracketOrScrew"@en .
+
+
+###  http://example.org/windis#RemoveBead
+windis:RemoveBead rdf:type owl:Class ;
+                  rdfs:subClassOf windis:DisassemblyStep ;
+                  rdfs:label "RemoveBead"@en .
+
+
+###  http://example.org/windis#RemoveGlazing
+windis:RemoveGlazing rdf:type owl:Class ;
+                     rdfs:subClassOf windis:DisassemblyStep ;
+                     rdfs:label "RemoveGlazing"@en .
+
+
+###  http://example.org/windis#ResidualServiceLifeAttribute
+windis:ResidualServiceLifeAttribute rdf:type owl:Class ;
+                                    rdfs:subClassOf windis:Attribute ;
+                                    rdfs:label "ResidualServiceLifeAttribute"@en .
+
+
+###  http://example.org/windis#RetentionAndSealSystem
+windis:RetentionAndSealSystem rdf:type owl:Class ;
+                              rdfs:subClassOf windis:Component ;
+                              rdfs:label "RetentionAndSealSystem"@en .
+
+
+###  http://example.org/windis#ReuseBarrier
+windis:ReuseBarrier rdf:type owl:Class ;
+                    rdfs:subClassOf windis:Other ;
+                    rdfs:label "ReuseBarrier"@en .
+
+
+###  http://example.org/windis#Sash
+windis:Sash rdf:type owl:Class ;
+            rdfs:subClassOf windis:FrameSystem ;
+            rdfs:label "Sash"@en .
+
+
+###  http://example.org/windis#SettingBlock
+windis:SettingBlock rdf:type owl:Class ;
+                    rdfs:subClassOf windis:Gasket ;
+                    rdfs:label "SettingBlock"@en .
+
+
+###  http://example.org/windis#SingleGlazingUnit
+windis:SingleGlazingUnit rdf:type owl:Class ;
+                         rdfs:subClassOf windis:GlazingSystem ;
+                         rdfs:label "SingleGlazingUnit"@en .
+
+
+###  http://example.org/windis#Subframe
+windis:Subframe rdf:type owl:Class ;
+                rdfs:subClassOf windis:FrameSystem ;
+                rdfs:label "Subframe"@en .
+
+
+###  http://example.org/windis#ThicknessAttribute
+windis:ThicknessAttribute rdf:type owl:Class ;
+                          rdfs:subClassOf windis:Attribute ;
+                          rdfs:label "ThicknessAttribute"@en .
+
+
+###  http://example.org/windis#UValueAttribute
+windis:UValueAttribute rdf:type owl:Class ;
+                       rdfs:subClassOf windis:Attribute ;
+                       rdfs:label "UValueAttribute"@en .
+
+
+###  http://example.org/windis#VacuumIGU
+windis:VacuumIGU rdf:type owl:Class ;
+                 rdfs:subClassOf windis:GlazingSystem ;
+                 rdfs:label "VacuumIGU"@en .
+
+
+###  http://example.org/windis#WallOpening
+windis:WallOpening rdf:type owl:Class ;
+                   rdfs:subClassOf windis:PhysicalElement ;
+                   rdfs:label "WallOpening"@en .
+
+
+###  http://example.org/windis#Weatherseal
+windis:Weatherseal rdf:type owl:Class ;
+                   rdfs:subClassOf windis:RetentionAndSealSystem ;
+                   rdfs:label "Weatherseal"@en .
+
+
+###  http://example.org/windis#WedgeGasket
+windis:WedgeGasket rdf:type owl:Class ;
+                   rdfs:subClassOf windis:Gasket ;
+                   rdfs:label "WedgeGasket"@en .
+
+
+###  http://example.org/windis#WidthAttribute
+windis:WidthAttribute rdf:type owl:Class ;
+                      rdfs:subClassOf windis:Attribute ;
+                      rdfs:label "WidthAttribute"@en .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( windis:Attribute
+                windis:Component
+                windis:Connection
+                windis:DisassemblyPlan
+                windis:DisassemblyStep
+                windis:FenestrationAssembly
+                windis:Other
+                windis:ProcessConstraint
+                windis:ProcessTool
+                windis:WallOpening
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

@@ -1,0 +1,792 @@
+@prefix :       <http://example.org/windis#> .
+@prefix windis: <http://example.org/windis#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# Ontology header
+#################################################################
+
+<http://example.org/windis>
+  a owl:Ontology ;
+  rdfs:label "WinDis — Window Disassembly Ontology (merged with test instances)"@en ;
+  rdfs:comment "WinDis models window components, their connections, and disassembly. This merged file includes two example windows (FA1 timber IGU with interior beads; FA2 aluminum Vacuum IGU with exterior beads)."@en .
+
+#################################################################
+# Top-level classes
+#################################################################
+
+windis:PhysicalElement a owl:Class ;
+  rdfs:label "PhysicalElement"@en .
+
+windis:FenestrationAssembly a owl:Class ;
+  rdfs:subClassOf windis:PhysicalElement ;
+  rdfs:label "FenestrationAssembly"@en .
+
+windis:Component a owl:Class ;
+  rdfs:subClassOf windis:PhysicalElement ;
+  rdfs:label "Component"@en .
+
+windis:WallOpening a owl:Class ;
+  rdfs:subClassOf windis:PhysicalElement ;
+  rdfs:label "WallOpening"@en .
+
+# Component buckets & concrete components
+windis:FrameSystem a owl:Class ;
+  rdfs:subClassOf windis:Component ;
+  rdfs:label "FrameSystem"@en .
+
+windis:Frame a owl:Class ;
+  rdfs:subClassOf windis:FrameSystem ;
+  rdfs:label "Frame"@en .
+
+windis:Subframe a owl:Class ;
+  rdfs:subClassOf windis:FrameSystem ;
+  rdfs:label "Subframe"@en .
+
+windis:Sash a owl:Class ;
+  rdfs:subClassOf windis:FrameSystem ;
+  rdfs:label "Sash"@en .
+
+windis:GlazingSystem a owl:Class ;
+  rdfs:subClassOf windis:Component ;
+  rdfs:label "GlazingSystem"@en .
+
+windis:SingleGlazingUnit a owl:Class ;
+  rdfs:subClassOf windis:GlazingSystem ;
+  rdfs:label "SingleGlazingUnit"@en .
+
+windis:InsulatingGlazingUnit a owl:Class ;
+  rdfs:subClassOf windis:GlazingSystem ;
+  rdfs:label "InsulatingGlazingUnit"@en .
+
+windis:VacuumIGU a owl:Class ;
+  rdfs:subClassOf windis:GlazingSystem ;
+  rdfs:label "VacuumIGU"@en .
+
+windis:RetentionAndSealSystem a owl:Class ;
+  rdfs:subClassOf windis:Component ;
+  rdfs:label "RetentionAndSealSystem"@en .
+
+windis:Bead a owl:Class ;
+  rdfs:subClassOf windis:RetentionAndSealSystem ;
+  rdfs:label "Bead"@en .
+
+windis:Gasket a owl:Class ;
+  rdfs:subClassOf windis:RetentionAndSealSystem ;
+  rdfs:label "Gasket"@en .
+
+windis:SettingBlock a owl:Class ;
+  rdfs:subClassOf windis:Gasket ;
+  rdfs:label "SettingBlock"@en .
+
+windis:WedgeGasket a owl:Class ;
+  rdfs:subClassOf windis:Gasket ;
+  rdfs:label "WedgeGasket"@en .
+
+windis:GlazingCompound a owl:Class ;
+  rdfs:subClassOf windis:RetentionAndSealSystem ;
+  rdfs:label "GlazingCompound"@en .
+
+windis:Weatherseal a owl:Class ;
+  rdfs:subClassOf windis:RetentionAndSealSystem ;
+  rdfs:label "Weatherseal"@en .
+
+#################################################################
+# Connection (top-level)
+#################################################################
+
+windis:Connection a owl:Class ;
+  rdfs:label "Connection"@en ;
+  rdfs:comment "Relates a base part (component or wall opening) and a fastened part (component). Categorical properties capture access side, reversibility, residue risk, location, and coverage."@en .
+
+#################################################################
+# Process model
+#################################################################
+
+windis:ProcessModel a owl:Class ;
+  rdfs:label "ProcessModel"@en .
+
+windis:DisassemblyPlan a owl:Class ;
+  rdfs:subClassOf windis:ProcessModel ;
+  rdfs:label "DisassemblyPlan"@en .
+
+windis:DisassemblyStep a owl:Class ;
+  rdfs:subClassOf windis:ProcessModel ;
+  rdfs:label "DisassemblyStep"@en .
+
+# Generic step types
+windis:RemoveBead a owl:Class ; rdfs:subClassOf windis:DisassemblyStep ; rdfs:label "RemoveBead"@en .
+windis:RemoveGlazing a owl:Class ; rdfs:subClassOf windis:DisassemblyStep ; rdfs:label "RemoveGlazing"@en .
+windis:DetachSash a owl:Class ; rdfs:subClassOf windis:DisassemblyStep ; rdfs:label "DetachSash"@en .
+windis:ReleaseBracketOrScrew a owl:Class ; rdfs:subClassOf windis:DisassemblyStep ; rdfs:label "ReleaseBracketOrScrew"@en .
+windis:CutPerimeterFoam a owl:Class ; rdfs:subClassOf windis:DisassemblyStep ; rdfs:label "CutPerimeterFoam"@en .
+windis:ExtractFrame a owl:Class ; rdfs:subClassOf windis:DisassemblyStep ; rdfs:label "ExtractFrame"@en .
+
+windis:ProcessTool a owl:Class ;
+  rdfs:subClassOf windis:ProcessModel ;
+  rdfs:label "ProcessTool"@en .
+
+windis:ProcessConstraint a owl:Class ;
+  rdfs:subClassOf windis:ProcessModel ;
+  rdfs:label "ProcessConstraint"@en .
+
+#################################################################
+# Other (assessment & circular outcomes)
+#################################################################
+
+windis:Other a owl:Class ;
+  rdfs:label "Other"@en ;
+  rdfs:comment "Umbrella for condition assessment and circular outcomes."@en .
+
+windis:ConditionAssessment a owl:Class ;
+  rdfs:subClassOf windis:Other ;
+  rdfs:label "ConditionAssessment"@en .
+
+windis:Outcome a owl:Class ;
+  rdfs:subClassOf windis:Other ;
+  rdfs:label "Outcome"@en .
+
+windis:EndOfLifeOption a owl:Class ;
+  rdfs:subClassOf windis:Outcome ;
+  rdfs:label "EndOfLifeOption"@en .
+
+windis:ReuseBarrier a owl:Class ;
+  rdfs:subClassOf windis:Outcome ;
+  rdfs:label "ReuseBarrier"@en .
+
+#################################################################
+# Attribute pattern (reified measured values)
+#################################################################
+
+windis:Attribute a owl:Class ;
+  rdfs:label "Attribute"@en ;
+  rdfs:comment "Reified measured/declared value with unit and provenance."@en .
+
+windis:WidthAttribute a owl:Class ; rdfs:subClassOf windis:Attribute ; rdfs:label "WidthAttribute"@en .
+windis:HeightAttribute a owl:Class ; rdfs:subClassOf windis:Attribute ; rdfs:label "HeightAttribute"@en .
+windis:ThicknessAttribute a owl:Class ; rdfs:subClassOf windis:Attribute ; rdfs:label "ThicknessAttribute"@en .
+windis:UValueAttribute a owl:Class ; rdfs:subClassOf windis:Attribute ; rdfs:label "UValueAttribute"@en .
+windis:DurometerAttribute a owl:Class ; rdfs:subClassOf windis:Attribute ; rdfs:label "DurometerAttribute"@en .
+windis:ResidualServiceLifeAttribute a owl:Class ; rdfs:subClassOf windis:Attribute ; rdfs:label "ResidualServiceLifeAttribute"@en .
+
+#################################################################
+# Object properties
+#################################################################
+
+# Composition / structure
+windis:hasComponent a owl:ObjectProperty ;
+  rdfs:domain [ a owl:Class ; owl:unionOf ( windis:FenestrationAssembly windis:Component ) ] ;
+  rdfs:range  windis:Component ;
+  rdfs:label "hasComponent"@en ;
+  owl:inverseOf windis:partOf .
+
+windis:partOf a owl:ObjectProperty , owl:TransitiveProperty ;
+  rdfs:domain windis:Component ;
+  rdfs:range  [ a owl:Class ; owl:unionOf ( windis:FenestrationAssembly windis:Component ) ] ;
+  rdfs:label "partOf"@en .
+
+windis:installedIn a owl:ObjectProperty ;
+  rdfs:domain windis:FenestrationAssembly ;
+  rdfs:range  windis:WallOpening ;
+  rdfs:label "installedIn"@en .
+
+# Connection links
+windis:hasConnection a owl:ObjectProperty ;
+  rdfs:domain [ a owl:Class ; owl:unionOf ( windis:FenestrationAssembly windis:Component ) ] ;
+  rdfs:range  windis:Connection ;
+  rdfs:label "hasConnection"@en .
+
+windis:fastenedPart a owl:ObjectProperty ;
+  rdfs:domain windis:Connection ; rdfs:range windis:Component ;
+  rdfs:label "fastenedPart"@en .
+
+windis:basePartComponent a owl:ObjectProperty ;
+  rdfs:domain windis:Connection ; rdfs:range windis:Component ;
+  rdfs:label "basePartComponent"@en .
+
+windis:basePartWall a owl:ObjectProperty ;
+  rdfs:domain windis:Connection ; rdfs:range windis:WallOpening ;
+  rdfs:label "basePartWall"@en .
+
+windis:requiresTool a owl:ObjectProperty ;
+  rdfs:domain windis:Connection ; rdfs:range windis:ProcessTool ;
+  rdfs:label "requiresTool"@en .
+
+windis:hasConstraint a owl:ObjectProperty ;
+  rdfs:domain [ a owl:Class ; owl:unionOf ( windis:DisassemblyPlan windis:DisassemblyStep windis:Connection ) ] ;
+  rdfs:range  windis:ProcessConstraint ;
+  rdfs:label "hasConstraint"@en .
+
+# Process relations
+windis:hasDisassemblyPlan a owl:ObjectProperty ;
+  rdfs:domain [ a owl:Class ; owl:unionOf ( windis:FenestrationAssembly windis:Component ) ] ;
+  rdfs:range  windis:DisassemblyPlan ;
+  rdfs:label "hasDisassemblyPlan"@en .
+
+windis:hasStep a owl:ObjectProperty ;
+  rdfs:domain windis:DisassemblyPlan ; rdfs:range windis:DisassemblyStep ;
+  rdfs:label "hasStep"@en .
+
+windis:hasPrecondition a owl:ObjectProperty ;
+  rdfs:domain windis:DisassemblyStep ; rdfs:range windis:DisassemblyStep ;
+  rdfs:label "hasPrecondition"@en .
+
+windis:hasNextStep a owl:ObjectProperty ;
+  rdfs:domain windis:DisassemblyStep ; rdfs:range windis:DisassemblyStep ;
+  rdfs:label "hasNextStep"@en .
+
+windis:targetsComponent a owl:ObjectProperty ;
+  rdfs:domain windis:DisassemblyStep ; rdfs:range windis:Component ;
+  rdfs:label "targetsComponent"@en .
+
+windis:targetsConnection a owl:ObjectProperty ;
+  rdfs:domain windis:DisassemblyStep ; rdfs:range windis:Connection ;
+  rdfs:label "targetsConnection"@en .
+
+windis:usesTool a owl:ObjectProperty ;
+  rdfs:domain windis:DisassemblyStep ; rdfs:range windis:ProcessTool ;
+  rdfs:label "usesTool"@en .
+
+# Outcome links
+windis:recommendedEoL a owl:ObjectProperty ;
+  rdfs:domain windis:Component ; rdfs:range windis:EndOfLifeOption ;
+  rdfs:label "recommendedEoL"@en .
+
+windis:hasBarrier a owl:ObjectProperty ;
+  rdfs:domain [ a owl:Class ; owl:unionOf ( windis:Component windis:FenestrationAssembly ) ] ;
+  rdfs:range windis:ReuseBarrier ;
+  rdfs:label "hasBarrier"@en .
+
+# Assessment linkage
+windis:hasAssessment a owl:ObjectProperty ;
+  rdfs:domain owl:Thing ; rdfs:range windis:ConditionAssessment ;
+  rdfs:label "hasAssessment"@en .
+
+#################################################################
+# Datatype properties — categorical enums (inline literal sets)
+#################################################################
+
+### Connection (closed categorical codes)
+windis:accessSide a owl:DatatypeProperty ;
+  rdfs:domain windis:Connection ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Inside" "Outside" "Both" "None" ) ] ;
+  rdfs:label "accessSide"@en .
+
+windis:reversibility a owl:DatatypeProperty ;
+  rdfs:domain windis:Connection ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Reversible" "Semi" "Destructive" ) ] ;
+  rdfs:label "reversibility"@en .
+
+windis:residueRisk a owl:DatatypeProperty ;
+  rdfs:domain windis:Connection ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "None" "Low" "High" ) ] ;
+  rdfs:label "residueRisk"@en .
+
+windis:connectionLocation a owl:DatatypeProperty ;
+  rdfs:domain windis:Connection ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Jamb" "Head" "Sill" "Mullion" ) ] ;
+  rdfs:label "connectionLocation"@en .
+
+windis:coverage a owl:DatatypeProperty ;
+  rdfs:domain windis:Connection ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Perimeter" "Local" ) ] ;
+  rdfs:label "coverage"@en .
+
+### FenestrationAssembly (performance & cover)
+windis:airPermeabilityClass a owl:DatatypeProperty ;
+  rdfs:domain windis:FenestrationAssembly ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "1" "2" "3" "4" ) ] ;
+  rdfs:label "airPermeabilityClass"@en .
+
+windis:watertightnessClass a owl:DatatypeProperty ;
+  rdfs:domain windis:FenestrationAssembly ;
+  rdfs:range [ a rdfs:Datatype ;
+               owl:oneOf ( "1A" "2A" "3A" "4A" "5A" "6A" "7A" "8A" "9A" "E" ) ] ;
+  rdfs:label "watertightnessClass"@en .
+
+windis:coverSide a owl:DatatypeProperty ;
+  rdfs:domain windis:FenestrationAssembly ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Inside" "Outside" "Both" "None" ) ] ;
+  rdfs:label "coverSide"@en .
+
+### Component (material/finish)
+windis:materialKind a owl:DatatypeProperty ;
+  rdfs:domain windis:Component ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "PVC" "Timber" "Aluminum" "Glass" "Steel" ) ] ;
+  rdfs:label "materialKind"@en .
+
+windis:finishType a owl:DatatypeProperty ;
+  rdfs:domain windis:Component ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Paint" "Anodized" "FoilLaminate" "PowderCoated" ) ] ;
+  rdfs:label "finishType"@en .
+
+# Optional multi-valued categorical (repeat property to list several)
+windis:substancesPresent a owl:DatatypeProperty ;
+  rdfs:domain windis:Component ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Lead" "Asbestos" "PCB" ) ] ;
+  rdfs:label "substancesPresent"@en .
+
+### GlazingSystem (fill kind)
+windis:fillKind a owl:DatatypeProperty ;
+  rdfs:domain windis:GlazingSystem ;
+  rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "Air" "Argon" "Krypton" "Vacuum" "Aerogel" ) ] ;
+  rdfs:label "fillKind"@en .
+
+#################################################################
+# Datatype properties — simple flags / free literals
+#################################################################
+
+# Assembly context
+windis:hasCoverOverlap a owl:DatatypeProperty ;
+  rdfs:domain windis:FenestrationAssembly ; rdfs:range xsd:boolean ;
+  rdfs:label "hasCoverOverlap"@en .
+
+# Glazing
+windis:isServiceableAsUnit a owl:DatatypeProperty ;
+  rdfs:domain windis:GlazingSystem ; rdfs:range xsd:boolean ;
+  rdfs:label "isServiceableAsUnit"@en .
+
+# Wall opening context
+windis:lintelPresent a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:boolean ; rdfs:label "lintelPresent"@en .
+windis:exteriorReturnPresent a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:boolean ; rdfs:label "exteriorReturnPresent"@en .
+windis:interiorReturnPresent a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:boolean ; rdfs:label "interiorReturnPresent"@en .
+windis:interiorAccess a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:boolean ; rdfs:label "interiorAccess"@en .
+windis:storey a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:int ; rdfs:label "storey"@en .
+windis:orientation a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:string ; rdfs:label "orientation"@en .
+windis:exposureClass a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:string ; rdfs:label "exposureClass"@en .
+windis:exteriorAccess a owl:DatatypeProperty ; rdfs:domain windis:WallOpening ; rdfs:range xsd:string ; rdfs:label "exteriorAccess"@en .
+
+# Process metadata
+windis:sequenceNumber a owl:DatatypeProperty ;
+  rdfs:domain windis:DisassemblyStep ; rdfs:range xsd:int ;
+  rdfs:label "sequenceNumber"@en .
+
+# Component hazard flag
+windis:hazardousOverall a owl:DatatypeProperty ;
+  rdfs:domain windis:Component ; rdfs:range xsd:boolean ;
+  rdfs:label "hazardousOverall"@en .
+
+# Assessment note
+windis:assessmentNote a owl:DatatypeProperty ;
+  rdfs:domain windis:ConditionAssessment ; rdfs:range xsd:string ;
+  rdfs:label "assessmentNote"@en .
+
+#################################################################
+# Attribute internals (shared across all Attribute subclasses)
+#################################################################
+
+windis:hasAttribute a owl:ObjectProperty ;
+  rdfs:domain owl:Thing ; rdfs:range windis:Attribute ;
+  rdfs:label "hasAttribute"@en .
+
+windis:hasValue a owl:DatatypeProperty ;
+  rdfs:domain windis:Attribute ; rdfs:range xsd:double ;
+  rdfs:label "hasValue"@en .
+
+windis:hasUnit a owl:DatatypeProperty ;
+  rdfs:domain windis:Attribute ; rdfs:range xsd:string ;
+  rdfs:label "hasUnit"@en .
+
+windis:hasTextValue a owl:DatatypeProperty ;
+  rdfs:domain windis:Attribute ; rdfs:range xsd:string ;
+  rdfs:label "hasTextValue"@en .
+
+windis:observedAt a owl:DatatypeProperty ;
+  rdfs:domain windis:Attribute ; rdfs:range xsd:dateTime ;
+  rdfs:label "observedAt"@en .
+
+windis:observedBy a owl:DatatypeProperty ;
+  rdfs:domain windis:Attribute ; rdfs:range xsd:string ;
+  rdfs:label "observedBy"@en .
+
+#################################################################
+# Helpful constraints (lightweight)
+#################################################################
+
+# Connection must have exactly one fastenedPart; at most one base (component) and/or one base (wall)
+windis:Connection rdfs:subClassOf
+  [ a owl:Restriction ; owl:onProperty windis:fastenedPart ; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass windis:Component ],
+  [ a owl:Restriction ; owl:onProperty windis:basePartComponent ; owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass windis:Component ],
+  [ a owl:Restriction ; owl:onProperty windis:basePartWall ; owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass windis:WallOpening ] .
+
+# FenestrationAssembly is installed in exactly one WallOpening and has components
+windis:FenestrationAssembly rdfs:subClassOf
+  [ a owl:Restriction ; owl:onProperty windis:installedIn ; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ; owl:onClass windis:WallOpening ],
+  [ a owl:Restriction ; owl:onProperty windis:hasComponent ; owl:someValuesFrom windis:Component ] .
+
+# DisassemblyPlan should have steps (someValuesFrom)
+windis:DisassemblyPlan rdfs:subClassOf
+  [ a owl:Restriction ; owl:onProperty windis:hasStep ; owl:someValuesFrom windis:DisassemblyStep ] .
+
+#################################################################
+# All-disjoint (major kinds)
+#################################################################
+
+[] a owl:AllDisjointClasses ;
+   owl:members (
+     windis:FenestrationAssembly
+     windis:Component
+     windis:Connection
+     windis:WallOpening
+     windis:DisassemblyPlan
+     windis:DisassemblyStep
+     windis:ProcessTool
+     windis:ProcessConstraint
+     windis:Other
+     windis:Attribute
+   ) .
+
+#################################################################
+# =====================  TEST INSTANCES  =======================
+#################################################################
+
+########## Window A: Timber frame, IGU, interior beads (FA1) ##########
+
+:WO1 a windis:WallOpening ;
+  windis:lintelPresent true ;
+  windis:interiorReturnPresent true ;
+  windis:exteriorReturnPresent false ;
+  windis:interiorAccess true ;
+  windis:storey 2 ;
+  windis:orientation "South" ;
+  windis:exposureClass "Moderate" ;
+  windis:exteriorAccess "Scaffold" .
+
+:FA1 a windis:FenestrationAssembly ;
+  windis:installedIn :WO1 ;
+  windis:hasCoverOverlap true ;
+  windis:coverSide "Outside" ;
+  windis:airPermeabilityClass "3" ;
+  windis:watertightnessClass "7A" .
+
+:Frame1 a windis:Frame ;
+  windis:materialKind "Timber" ;
+  windis:finishType  "Paint" ;
+  windis:hazardousOverall true ;
+  windis:substancesPresent "Lead" .
+
+:Sash1 a windis:Sash ;
+  windis:materialKind "Timber" ;
+  windis:finishType  "Paint" .
+
+:IGU1 a windis:InsulatingGlazingUnit ;
+  windis:fillKind "Argon" ;
+  windis:isServiceableAsUnit true .
+
+:Bead1 a windis:Bead ;
+  windis:materialKind "PVC" ;
+  windis:finishType  "FoilLaminate" .
+
+:Gasket1 a windis:WedgeGasket ;
+  windis:materialKind "PVC" .
+
+# Composition
+:FA1 windis:hasComponent :Frame1 , :Sash1 , :Bead1 , :Gasket1 , :IGU1 .
+:Frame1 windis:partOf :FA1 . :Sash1 windis:partOf :FA1 . :Bead1 windis:partOf :FA1 .
+:Gasket1 windis:partOf :FA1 . :IGU1 windis:partOf :FA1 .
+
+# Tools
+:BeadLifter a windis:ProcessTool .
+:UtilityKnife a windis:ProcessTool .
+:SuctionCups a windis:ProcessTool .
+:CordlessDrill a windis:ProcessTool .
+:OscillatingSaw a windis:ProcessTool .
+
+# Connections
+:C_BeadToSash a windis:Connection ;
+  windis:fastenedPart :Bead1 ;
+  windis:basePartComponent :Sash1 ;
+  windis:accessSide "Inside" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "None" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :BeadLifter .
+
+:C_GlassToSash a windis:Connection ;
+  windis:fastenedPart :IGU1 ;
+  windis:basePartComponent :Sash1 ;
+  windis:accessSide "Inside" ;
+  windis:reversibility "Semi" ;
+  windis:residueRisk "Low" ;
+  windis:coverage "Perimeter" ;
+  windis:requiresTool :UtilityKnife , :SuctionCups .
+
+:C_SashToFrame a windis:Connection ;
+  windis:fastenedPart :Sash1 ;
+  windis:basePartComponent :Frame1 ;
+  windis:accessSide "Inside" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "None" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :CordlessDrill .
+
+:C_FrameToWall_Head a windis:Connection ;
+  windis:fastenedPart :Frame1 ;
+  windis:basePartWall :WO1 ;
+  windis:connectionLocation "Head" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "None" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :CordlessDrill .
+
+:C_FrameToWall_Jamb a windis:Connection ;
+  windis:fastenedPart :Frame1 ;
+  windis:basePartWall :WO1 ;
+  windis:connectionLocation "Jamb" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "None" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :CordlessDrill .
+
+:C_FrameFoamToWall a windis:Connection ;
+  windis:fastenedPart :Frame1 ;
+  windis:basePartWall :WO1 ;
+  windis:reversibility "Destructive" ;
+  windis:residueRisk "High" ;
+  windis:coverage "Perimeter" ;
+  windis:requiresTool :OscillatingSaw .
+
+# Convenience links
+:Frame1 windis:hasConnection :C_FrameToWall_Head , :C_FrameToWall_Jamb , :C_FrameFoamToWall .
+:Sash1  windis:hasConnection :C_SashToFrame .
+:Bead1  windis:hasConnection :C_BeadToSash .
+:IGU1   windis:hasConnection :C_GlassToSash .
+
+# Disassembly plan & steps
+:Plan1 a windis:DisassemblyPlan . :FA1 windis:hasDisassemblyPlan :Plan1 .
+
+:Step1 a windis:RemoveBead ;
+  windis:sequenceNumber 1 ;
+  windis:targetsConnection :C_BeadToSash ;
+  windis:usesTool :BeadLifter .
+
+:Step2 a windis:RemoveGlazing ;
+  windis:sequenceNumber 2 ;
+  windis:targetsComponent :IGU1 ;
+  windis:usesTool :SuctionCups , :UtilityKnife ;
+  windis:hasPrecondition :Step1 .
+
+:Step3 a windis:DetachSash ;
+  windis:sequenceNumber 3 ;
+  windis:targetsConnection :C_SashToFrame ;
+  windis:usesTool :CordlessDrill ;
+  windis:hasPrecondition :Step2 .
+
+:Step4 a windis:ExtractFrame ;
+  windis:sequenceNumber 4 ;
+  windis:targetsConnection :C_FrameFoamToWall ;
+  windis:usesTool :OscillatingSaw ;
+  windis:hasPrecondition :Step3 .
+
+:Plan1 windis:hasStep :Step1 , :Step2 , :Step3 , :Step4 .
+
+# Condition assessments with RSL
+:CA_Frame1 a windis:ConditionAssessment ;
+  windis:assessmentNote "Paint worn; no rot; screw points sound." .
+:RSL_Frame1 a windis:ResidualServiceLifeAttribute ;
+  windis:hasValue 8.0 ; windis:hasUnit "years" ;
+  windis:observedAt "2025-09-13T10:00:00"^^xsd:dateTime ;
+  windis:observedBy "Surveyor A" .
+:CA_Frame1 windis:hasAttribute :RSL_Frame1 .
+:Frame1    windis:hasAssessment :CA_Frame1 .
+
+:CA_Sash1 a windis:ConditionAssessment .
+:RSL_Sash1 a windis:ResidualServiceLifeAttribute ;
+  windis:hasValue 10.0 ; windis:hasUnit "years" ;
+  windis:observedAt "2025-09-13T10:05:00"^^xsd:dateTime ;
+  windis:observedBy "Surveyor A" .
+:CA_Sash1 windis:hasAttribute :RSL_Sash1 .
+:Sash1    windis:hasAssessment :CA_Sash1 .
+
+:CA_IGU1 a windis:ConditionAssessment ;
+  windis:assessmentNote "Seal edges slightly fogged; still serviceable." .
+:RSL_IGU1 a windis:ResidualServiceLifeAttribute ;
+  windis:hasValue 5.0 ; windis:hasUnit "years" ;
+  windis:observedAt "2025-09-13T10:10:00"^^xsd:dateTime ;
+  windis:observedBy "Surveyor A" .
+:CA_IGU1 windis:hasAttribute :RSL_IGU1 .
+:IGU1    windis:hasAssessment :CA_IGU1 .
+
+########## Window B: Aluminum frame, Vacuum IGU, exterior beads (FA2) ##########
+
+:WO2 a windis:WallOpening ;
+  windis:lintelPresent true ;
+  windis:interiorReturnPresent false ;
+  windis:exteriorReturnPresent true ;
+  windis:interiorAccess true ;
+  windis:storey 5 ;
+  windis:orientation "West" ;
+  windis:exposureClass "High wind zone" ;
+  windis:exteriorAccess "Cherry picker" .
+
+:FA2 a windis:FenestrationAssembly ;
+  windis:installedIn :WO2 ;
+  windis:hasCoverOverlap true ;
+  windis:coverSide "Inside" ;
+  windis:airPermeabilityClass "4" ;
+  windis:watertightnessClass "E" .
+
+:Frame2 a windis:Frame ;
+  windis:materialKind "Aluminum" ;
+  windis:finishType  "Anodized" .
+
+:Sash2 a windis:Sash ;
+  windis:materialKind "Aluminum" ;
+  windis:finishType  "Anodized" .
+
+:VIG1 a windis:VacuumIGU ;
+  windis:fillKind "Vacuum" ;
+  windis:isServiceableAsUnit true .
+
+:Bead2 a windis:Bead ;
+  windis:materialKind "Aluminum" ;
+  windis:finishType  "Anodized" .
+
+:Gasket2 a windis:WedgeGasket ;
+  windis:materialKind "PVC" .
+
+# Composition
+:FA2 windis:hasComponent :Frame2 , :Sash2 , :Bead2 , :Gasket2 , :VIG1 .
+:Frame2 windis:partOf :FA2 . :Sash2 windis:partOf :FA2 . :Bead2 windis:partOf :FA2 .
+:Gasket2 windis:partOf :FA2 . :VIG1  windis:partOf :FA2 .
+
+# Tools (reuse existing + add one)
+:TorxDriver a windis:ProcessTool .
+:SealantCutter a windis:ProcessTool .
+
+# Connections (exterior beads; structural silicone + brackets)
+:C_BeadToSash_2 a windis:Connection ;
+  windis:fastenedPart :Bead2 ;
+  windis:basePartComponent :Sash2 ;
+  windis:accessSide "Outside" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "None" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :TorxDriver .
+
+:C_VIGToSash_2 a windis:Connection ;
+  windis:fastenedPart :VIG1 ;
+  windis:basePartComponent :Sash2 ;
+  windis:accessSide "Outside" ;
+  windis:reversibility "Semi" ;
+  windis:residueRisk "Low" ;
+  windis:coverage "Perimeter" ;
+  windis:requiresTool :SealantCutter , :SuctionCups .
+
+:C_SashToFrame_2 a windis:Connection ;
+  windis:fastenedPart :Sash2 ;
+  windis:basePartComponent :Frame2 ;
+  windis:accessSide "Inside" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "None" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :TorxDriver .
+
+# Frame fixings: brackets at jamb/head (reversible) + foam (destructive)
+:C_Frame2ToWall_Jamb a windis:Connection ;
+  windis:fastenedPart :Frame2 ;
+  windis:basePartWall :WO2 ;
+  windis:connectionLocation "Jamb" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "Low" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :TorxDriver .
+
+:C_Frame2ToWall_Head a windis:Connection ;
+  windis:fastenedPart :Frame2 ;
+  windis:basePartWall :WO2 ;
+  windis:connectionLocation "Head" ;
+  windis:reversibility "Reversible" ;
+  windis:residueRisk "Low" ;
+  windis:coverage "Local" ;
+  windis:requiresTool :TorxDriver .
+
+:C_Frame2FoamToWall a windis:Connection ;
+  windis:fastenedPart :Frame2 ;
+  windis:basePartWall :WO2 ;
+  windis:reversibility "Destructive" ;
+  windis:residueRisk "High" ;
+  windis:coverage "Perimeter" ;
+  windis:requiresTool :OscillatingSaw .
+
+# Convenience links
+:Frame2 windis:hasConnection :C_Frame2ToWall_Jamb , :C_Frame2ToWall_Head , :C_Frame2FoamToWall .
+:Sash2  windis:hasConnection :C_SashToFrame_2 .
+:Bead2  windis:hasConnection :C_BeadToSash_2 .
+:VIG1   windis:hasConnection :C_VIGToSash_2 .
+
+# Disassembly plan & steps (exterior bead first, then silicone cut, etc.)
+:Plan2 a windis:DisassemblyPlan . :FA2 windis:hasDisassemblyPlan :Plan2 .
+
+:Step1_2 a windis:RemoveBead ;
+  windis:sequenceNumber 1 ;
+  windis:targetsConnection :C_BeadToSash_2 ;
+  windis:usesTool :TorxDriver .
+
+:Step2_2 a windis:RemoveGlazing ;
+  windis:sequenceNumber 2 ;
+  windis:targetsComponent :VIG1 ;
+  windis:usesTool :SuctionCups , :SealantCutter ;
+  windis:hasPrecondition :Step1_2 .
+
+:Step3_2 a windis:DetachSash ;
+  windis:sequenceNumber 3 ;
+  windis:targetsConnection :C_SashToFrame_2 ;
+  windis:usesTool :TorxDriver ;
+  windis:hasPrecondition :Step2_2 .
+
+:Step4_2 a windis:ExtractFrame ;
+  windis:sequenceNumber 4 ;
+  windis:targetsConnection :C_Frame2FoamToWall ;
+  windis:usesTool :OscillatingSaw ;
+  windis:hasPrecondition :Step3_2 .
+
+:Plan2 windis:hasStep :Step1_2 , :Step2_2 , :Step3_2 , :Step4_2 .
+
+# Condition assessments with RSL (aluminum often longer life)
+:CA_Frame2 a windis:ConditionAssessment ;
+  windis:assessmentNote "Anodized surface intact; minor scratches." .
+:RSL_Frame2 a windis:ResidualServiceLifeAttribute ;
+  windis:hasValue 20.0 ; windis:hasUnit "years" ;
+  windis:observedAt "2025-09-13T11:00:00"^^xsd:dateTime ;
+  windis:observedBy "Surveyor B" .
+:CA_Frame2 windis:hasAttribute :RSL_Frame2 .
+:Frame2    windis:hasAssessment :CA_Frame2 .
+
+:CA_VIG1 a windis:ConditionAssessment .
+:RSL_VIG1 a windis:ResidualServiceLifeAttribute ;
+  windis:hasValue 12.0 ; windis:hasUnit "years" ;
+  windis:observedAt "2025-09-13T11:05:00"^^xsd:dateTime ;
+  windis:observedBy "Surveyor B" .
+:CA_VIG1 windis:hasAttribute :RSL_VIG1 .
+:VIG1    windis:hasAssessment :CA_VIG1 .
+
+@prefix windis: <http://example.org/windis#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+
+# ----- Window A steps -----
+windis:Step1  rdfs:label "Step 1 — Remove interior beads"@en .
+windis:Step2  rdfs:label "Step 2 — Remove IGU"@en .
+windis:Step3  rdfs:label "Step 3 — Detach sash"@en .
+windis:Step4  rdfs:label "Step 4 — Extract frame (cut foam)"@en .
+
+# Targets (optional labels for readability)
+windis:C_BeadToSash     rdfs:label "Bead→Sash (interior)"@en .
+windis:IGU1             rdfs:label "IGU1 (argon)"@en .
+windis:C_SashToFrame    rdfs:label "Sash→Frame (screws/hinges)"@en .
+windis:C_FrameFoamToWall rdfs:label "Frame→Wall (foam)"@en .
+
+# ----- Window B steps -----
+windis:Step1_2 rdfs:label "Step 1 — Remove exterior beads"@en .
+windis:Step2_2 rdfs:label "Step 2 — Release VIG (silicone cut)"@en .
+windis:Step3_2 rdfs:label "Step 3 — Detach sash"@en .
+windis:Step4_2 rdfs:label "Step 4 — Extract frame (cut foam)"@en .
+
+# Targets (optional)
+windis:C_BeadToSash_2 rdfs:label "Bead→Sash (exterior)"@en .
+windis:VIG1           rdfs:label "VIG1 (vacuum)"@en .
+windis:C_SashToFrame_2 rdfs:label "Sash→Frame (brackets/torx)"@en .
+windis:C_Frame2FoamToWall rdfs:label "Frame→Wall (foam)"@en .

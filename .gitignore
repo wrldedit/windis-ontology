@@ -1,0 +1,1 @@
+printf "# OS junk\n.DS_Store\nThumbs.db\n" >
