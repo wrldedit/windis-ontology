@@ -8,7 +8,7 @@
 @base <http://example.org/windis#> .
 
 <http://example.org/windis> rdf:type owl:Ontology ;
-                             rdfs:comment "WinDis models window components, their connections, and disassembly processes. Categorical codes use inline literal enumerations; measured data use a reified Attribute pattern with units and provenance. 'Other' groups condition assessment and circular outcomes."@en ;
+                             rdfs:comment "Models window components, their connections, and disassembly planning. Includes two worked examples."@en ;
                              rdfs:label "WinDis — Window Disassembly Ontology"@en .
 
 #################################################################
@@ -84,18 +84,6 @@ windis:hasConnection rdf:type owl:ObjectProperty ;
                      rdfs:label "hasConnection"@en .
 
 
-###  http://example.org/windis#hasConstraint
-windis:hasConstraint rdf:type owl:ObjectProperty ;
-                     rdfs:domain [ rdf:type owl:Class ;
-                                   owl:unionOf ( windis:Connection
-                                                 windis:DisassemblyPlan
-                                                 windis:DisassemblyStep
-                                               )
-                                 ] ;
-                     rdfs:range windis:ProcessConstraint ;
-                     rdfs:label "hasConstraint"@en .
-
-
 ###  http://example.org/windis#hasDisassemblyPlan
 windis:hasDisassemblyPlan rdf:type owl:ObjectProperty ;
                           rdfs:domain [ rdf:type owl:Class ;
@@ -152,13 +140,6 @@ windis:recommendedEoL rdf:type owl:ObjectProperty ;
                       rdfs:domain windis:Component ;
                       rdfs:range windis:EndOfLifeOption ;
                       rdfs:label "recommendedEoL"@en .
-
-
-###  http://example.org/windis#requiresTool
-windis:requiresTool rdf:type owl:ObjectProperty ;
-                    rdfs:domain windis:Connection ;
-                    rdfs:range windis:ProcessTool ;
-                    rdfs:label "requiresTool"@en .
 
 
 ###  http://example.org/windis#targetsComponent
@@ -226,13 +207,6 @@ windis:airPermeabilityClass rdf:type owl:DatatypeProperty ;
                                                    ]
                                        ] ;
                             rdfs:label "airPermeabilityClass"@en .
-
-
-###  http://example.org/windis#assessmentNote
-windis:assessmentNote rdf:type owl:DatatypeProperty ;
-                      rdfs:domain windis:ConditionAssessment ;
-                      rdfs:range xsd:string ;
-                      rdfs:label "assessmentNote"@en .
 
 
 ###  http://example.org/windis#connectionLocation
@@ -365,13 +339,6 @@ windis:hasCoverOverlap rdf:type owl:DatatypeProperty ;
                        rdfs:label "hasCoverOverlap"@en .
 
 
-###  http://example.org/windis#hasTextValue
-windis:hasTextValue rdf:type owl:DatatypeProperty ;
-                    rdfs:domain windis:Attribute ;
-                    rdfs:range xsd:string ;
-                    rdfs:label "hasTextValue"@en .
-
-
 ###  http://example.org/windis#hasUnit
 windis:hasUnit rdf:type owl:DatatypeProperty ;
                rdfs:domain windis:Attribute ;
@@ -445,6 +412,49 @@ windis:materialKind rdf:type owl:DatatypeProperty ;
                     rdfs:label "materialKind"@en .
 
 
+###  http://example.org/windis#mechanismType
+windis:mechanismType rdf:type owl:DatatypeProperty ;
+                     rdfs:domain windis:Connection ;
+                     rdfs:range [ rdf:type rdfs:Datatype ;
+                                  owl:oneOf [ rdf:type rdf:List ;
+                                              rdf:first "AdhesiveBond" ;
+                                              rdf:rest [ rdf:type rdf:List ;
+                                                         rdf:first "AnchorPlug" ;
+                                                         rdf:rest [ rdf:type rdf:List ;
+                                                                    rdf:first "BeadRetention" ;
+                                                                    rdf:rest [ rdf:type rdf:List ;
+                                                                               rdf:first "BracketLug" ;
+                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                          rdf:first "Clip" ;
+                                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                                     rdf:first "ExpandingFoamBond" ;
+                                                                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                                                                rdf:first "GasketCompression" ;
+                                                                                                                rdf:rest [ rdf:type rdf:List ;
+                                                                                                                           rdf:first "Hinge" ;
+                                                                                                                           rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                      rdf:first "MortarBed" ;
+                                                                                                                                      rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                                 rdf:first "ScrewBolt" ;
+                                                                                                                                                 rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                                            rdf:first "StructuralSiliconeBond" ;
+                                                                                                                                                            rdf:rest rdf:nil
+                                                                                                                                                          ]
+                                                                                                                                               ]
+                                                                                                                                    ]
+                                                                                                                         ]
+                                                                                                              ]
+                                                                                                   ]
+                                                                                        ]
+                                                                             ]
+                                                                  ]
+                                                       ]
+                                            ]
+                                ] ;
+                     rdfs:comment "Closed category of the physical fastening mechanism."@en ;
+                     rdfs:label "mechanismType"@en .
+
+
 ###  http://example.org/windis#observedAt
 windis:observedAt rdf:type owl:DatatypeProperty ;
                   rdfs:domain windis:Attribute ;
@@ -500,13 +510,6 @@ windis:reversibility rdf:type owl:DatatypeProperty ;
                                             ]
                                 ] ;
                      rdfs:label "reversibility"@en .
-
-
-###  http://example.org/windis#sequenceNumber
-windis:sequenceNumber rdf:type owl:DatatypeProperty ;
-                      rdfs:domain windis:DisassemblyStep ;
-                      rdfs:range xsd:int ;
-                      rdfs:label "sequenceNumber"@en .
 
 
 ###  http://example.org/windis#storey
@@ -577,9 +580,14 @@ windis:watertightnessClass rdf:type owl:DatatypeProperty ;
 #    Classes
 #################################################################
 
+###  http://example.org/windis#AnchorPlug
+windis:AnchorPlug rdf:type owl:Class ;
+                  rdfs:subClassOf windis:Hardware ;
+                  rdfs:label "AnchorPlug"@en .
+
+
 ###  http://example.org/windis#Attribute
 windis:Attribute rdf:type owl:Class ;
-                 rdfs:comment "Reified measured/declared value with unit and provenance."@en ;
                  rdfs:label "Attribute"@en .
 
 
@@ -587,6 +595,18 @@ windis:Attribute rdf:type owl:Class ;
 windis:Bead rdf:type owl:Class ;
             rdfs:subClassOf windis:RetentionAndSealSystem ;
             rdfs:label "Bead"@en .
+
+
+###  http://example.org/windis#BeadClip
+windis:BeadClip rdf:type owl:Class ;
+                rdfs:subClassOf windis:Hardware ;
+                rdfs:label "BeadClip"@en .
+
+
+###  http://example.org/windis#Bracket
+windis:Bracket rdf:type owl:Class ;
+               rdfs:subClassOf windis:Hardware ;
+               rdfs:label "Bracket"@en .
 
 
 ###  http://example.org/windis#Component
@@ -618,7 +638,7 @@ windis:Connection rdf:type owl:Class ;
                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                     owl:onClass windis:WallOpening
                                   ] ;
-                  rdfs:comment "Relates a base part (component or wall opening) and a fastened part (component). Categorical properties capture access side, reversibility, residue risk, location, and coverage."@en ;
+                  rdfs:comment "Relates a base (component or wall) and a fastened component; disassembly-relevant facets on the connection."@en ;
                   rdfs:label "Connection"@en .
 
 
@@ -650,15 +670,9 @@ windis:DisassemblyStep rdf:type owl:Class ;
                        rdfs:label "DisassemblyStep"@en .
 
 
-###  http://example.org/windis#DurometerAttribute
-windis:DurometerAttribute rdf:type owl:Class ;
-                          rdfs:subClassOf windis:Attribute ;
-                          rdfs:label "DurometerAttribute"@en .
-
-
 ###  http://example.org/windis#EndOfLifeOption
 windis:EndOfLifeOption rdf:type owl:Class ;
-                       rdfs:subClassOf windis:Other ;
+                       rdfs:subClassOf windis:Outcome ;
                        rdfs:label "EndOfLifeOption"@en .
 
 
@@ -713,10 +727,27 @@ windis:GlazingSystem rdf:type owl:Class ;
                      rdfs:label "GlazingSystem"@en .
 
 
+###  http://example.org/windis#Handle
+windis:Handle rdf:type owl:Class ;
+              rdfs:subClassOf windis:Hardware ;
+              rdfs:label "Handle"@en .
+
+
+###  http://example.org/windis#Hardware
+windis:Hardware rdf:type owl:Class ;
+                rdfs:subClassOf windis:Component .
+
+
 ###  http://example.org/windis#HeightAttribute
 windis:HeightAttribute rdf:type owl:Class ;
                        rdfs:subClassOf windis:Attribute ;
                        rdfs:label "HeightAttribute"@en .
+
+
+###  http://example.org/windis#Hinge
+windis:Hinge rdf:type owl:Class ;
+             rdfs:subClassOf windis:Hardware ;
+             rdfs:label "Hinge"@en .
 
 
 ###  http://example.org/windis#InsulatingGlazingUnit
@@ -725,10 +756,21 @@ windis:InsulatingGlazingUnit rdf:type owl:Class ;
                              rdfs:label "InsulatingGlazingUnit"@en .
 
 
+###  http://example.org/windis#LockKeep
+windis:LockKeep rdf:type owl:Class ;
+                rdfs:subClassOf windis:Hardware ;
+                rdfs:label "LockKeep"@en .
+
+
 ###  http://example.org/windis#Other
 windis:Other rdf:type owl:Class ;
-             rdfs:comment "Umbrella for condition assessment and circular outcomes."@en ;
              rdfs:label "Other"@en .
+
+
+###  http://example.org/windis#Outcome
+windis:Outcome rdf:type owl:Class ;
+               rdfs:subClassOf windis:Other ;
+               rdfs:label "Outcome"@en .
 
 
 ###  http://example.org/windis#PhysicalElement
@@ -785,7 +827,7 @@ windis:RetentionAndSealSystem rdf:type owl:Class ;
 
 ###  http://example.org/windis#ReuseBarrier
 windis:ReuseBarrier rdf:type owl:Class ;
-                    rdfs:subClassOf windis:Other ;
+                    rdfs:subClassOf windis:Outcome ;
                     rdfs:label "ReuseBarrier"@en .
 
 
@@ -793,6 +835,12 @@ windis:ReuseBarrier rdf:type owl:Class ;
 windis:Sash rdf:type owl:Class ;
             rdfs:subClassOf windis:FrameSystem ;
             rdfs:label "Sash"@en .
+
+
+###  http://example.org/windis#ScrewBolt
+windis:ScrewBolt rdf:type owl:Class ;
+                 rdfs:subClassOf windis:Hardware ;
+                 rdfs:label "ScrewBolt"@en .
 
 
 ###  http://example.org/windis#SettingBlock
@@ -805,6 +853,12 @@ windis:SettingBlock rdf:type owl:Class ;
 windis:SingleGlazingUnit rdf:type owl:Class ;
                          rdfs:subClassOf windis:GlazingSystem ;
                          rdfs:label "SingleGlazingUnit"@en .
+
+
+###  http://example.org/windis#StayRestrictor
+windis:StayRestrictor rdf:type owl:Class ;
+                      rdfs:subClassOf windis:Hardware ;
+                      rdfs:label "StayRestrictor"@en .
 
 
 ###  http://example.org/windis#Subframe
@@ -856,8 +910,699 @@ windis:WidthAttribute rdf:type owl:Class ;
 
 
 #################################################################
+#    Individuals
+#################################################################
+
+###  http://example.org/windis#Anchor_A1
+windis:Anchor_A1 rdf:type owl:NamedIndividual ,
+                          windis:AnchorPlug ;
+                 windis:partOf windis:FA1 ;
+                 rdfs:label "Anchor_A1 (head anchor)"@en .
+
+
+###  http://example.org/windis#Anchor_A2
+windis:Anchor_A2 rdf:type owl:NamedIndividual ,
+                          windis:AnchorPlug ;
+                 windis:partOf windis:FA1 ;
+                 rdfs:label "Anchor_A2 (jamb anchor)"@en .
+
+
+###  http://example.org/windis#Anchor_B1
+windis:Anchor_B1 rdf:type owl:NamedIndividual ,
+                          windis:AnchorPlug ;
+                 windis:partOf windis:FA2 ;
+                 rdfs:label "Anchor_B1"@en .
+
+
+###  http://example.org/windis#Anchor_B2
+windis:Anchor_B2 rdf:type owl:NamedIndividual ,
+                          windis:AnchorPlug ;
+                 windis:partOf windis:FA2 ;
+                 rdfs:label "Anchor_B2"@en .
+
+
+###  http://example.org/windis#Bead1
+windis:Bead1 rdf:type owl:NamedIndividual ,
+                      windis:Bead ;
+             windis:partOf windis:FA1 ;
+             windis:finishType "FoilLaminate" ;
+             windis:materialKind "PVC" ;
+             rdfs:label "Bead1 — interior PVC bead"@en .
+
+
+###  http://example.org/windis#Bead2
+windis:Bead2 rdf:type owl:NamedIndividual ,
+                      windis:Bead ;
+             windis:partOf windis:FA2 ;
+             windis:finishType "Anodized" ;
+             windis:materialKind "Aluminum" ;
+             rdfs:label "Bead2 — exterior bead"@en .
+
+
+###  http://example.org/windis#BeadClip_B1
+windis:BeadClip_B1 rdf:type owl:NamedIndividual ,
+                            windis:BeadClip ;
+                   windis:partOf windis:FA2 ;
+                   rdfs:label "BeadClip_B1"@en .
+
+
+###  http://example.org/windis#BeadLifter
+windis:BeadLifter rdf:type owl:NamedIndividual ,
+                           windis:ProcessTool ;
+                  rdfs:label "Bead lifter"@en .
+
+
+###  http://example.org/windis#Bracket_A1
+windis:Bracket_A1 rdf:type owl:NamedIndividual ,
+                           windis:Bracket ;
+                  windis:partOf windis:FA1 ;
+                  rdfs:label "Bracket_A1 (head bracket)"@en .
+
+
+###  http://example.org/windis#Bracket_A2
+windis:Bracket_A2 rdf:type owl:NamedIndividual ,
+                           windis:Bracket ;
+                  windis:partOf windis:FA1 ;
+                  rdfs:label "Bracket_A2 (jamb bracket)"@en .
+
+
+###  http://example.org/windis#Bracket_B1
+windis:Bracket_B1 rdf:type owl:NamedIndividual ,
+                           windis:Bracket ;
+                  windis:partOf windis:FA2 ;
+                  rdfs:label "Bracket_B1 (jamb)"@en .
+
+
+###  http://example.org/windis#Bracket_B2
+windis:Bracket_B2 rdf:type owl:NamedIndividual ,
+                           windis:Bracket ;
+                  windis:partOf windis:FA2 ;
+                  rdfs:label "Bracket_B2 (head)"@en .
+
+
+###  http://example.org/windis#CA_Frame1
+windis:CA_Frame1 rdf:type owl:NamedIndividual ,
+                          windis:ConditionAssessment ;
+                 windis:hasAttribute windis:RSL_Frame1 ;
+                 rdfs:label "CA Frame1"@en .
+
+
+###  http://example.org/windis#CA_Frame2
+windis:CA_Frame2 rdf:type owl:NamedIndividual ,
+                          windis:ConditionAssessment ;
+                 windis:hasAttribute windis:RSL_Frame2 ;
+                 rdfs:label "CA Frame2"@en .
+
+
+###  http://example.org/windis#CA_IGU1
+windis:CA_IGU1 rdf:type owl:NamedIndividual ,
+                        windis:ConditionAssessment ;
+               windis:hasAttribute windis:RSL_IGU1 ;
+               rdfs:label "CA IGU1"@en .
+
+
+###  http://example.org/windis#CA_VIG1
+windis:CA_VIG1 rdf:type owl:NamedIndividual ,
+                        windis:ConditionAssessment ;
+               windis:hasAttribute windis:RSL_VIG1 ;
+               rdfs:label "CA VIG1"@en .
+
+
+###  http://example.org/windis#C_BeadClip_ToBead
+windis:C_BeadClip_ToBead rdf:type owl:NamedIndividual ,
+                                  windis:Connection ;
+                         windis:basePartComponent windis:Bead2 ;
+                         windis:fastenedPart windis:BeadClip_B1 ;
+                         windis:usesTool windis:TorxDriver ;
+                         windis:accessSide "Outside" ;
+                         windis:coverage "Local" ;
+                         windis:mechanismType "Clip" ;
+                         windis:reversibility "Reversible" ;
+                         rdfs:label "Conn — BeadClip to Bead (clip)"@en .
+
+
+###  http://example.org/windis#C_BeadToSash
+windis:C_BeadToSash rdf:type owl:NamedIndividual ,
+                             windis:Connection ;
+                    windis:basePartComponent windis:Sash1 ;
+                    windis:fastenedPart windis:Bead1 ;
+                    windis:usesTool windis:BeadLifter ;
+                    windis:accessSide "Inside" ;
+                    windis:coverage "Local" ;
+                    windis:mechanismType "BeadRetention" ;
+                    windis:residueRisk "None" ;
+                    windis:reversibility "Reversible" ;
+                    rdfs:label "Conn — Bead to Sash (interior)"@en .
+
+
+###  http://example.org/windis#C_BracketA1_ToFrame
+windis:C_BracketA1_ToFrame rdf:type owl:NamedIndividual ,
+                                    windis:Connection ;
+                           windis:basePartComponent windis:Frame1 ;
+                           windis:fastenedPart windis:Bracket_A1 ;
+                           windis:usesTool windis:CordlessDrill ;
+                           windis:connectionLocation "Head" ;
+                           windis:coverage "Local" ;
+                           windis:mechanismType "ScrewBolt" ;
+                           windis:reversibility "Reversible" ;
+                           rdfs:label "Conn — Bracket_A1 to Frame (screws)"@en .
+
+
+###  http://example.org/windis#C_BracketA1_ToWall
+windis:C_BracketA1_ToWall rdf:type owl:NamedIndividual ,
+                                   windis:Connection ;
+                          windis:basePartWall windis:WO1 ;
+                          windis:fastenedPart windis:Bracket_A1 ;
+                          windis:usesTool windis:CordlessDrill ;
+                          windis:connectionLocation "Head" ;
+                          windis:coverage "Local" ;
+                          windis:mechanismType "AnchorPlug" ;
+                          windis:reversibility "Reversible" ;
+                          rdfs:label "Conn — Bracket_A1 to Wall (anchor)"@en .
+
+
+###  http://example.org/windis#C_BracketA2_ToFrame
+windis:C_BracketA2_ToFrame rdf:type owl:NamedIndividual ,
+                                    windis:Connection ;
+                           windis:basePartComponent windis:Frame1 ;
+                           windis:fastenedPart windis:Bracket_A2 ;
+                           windis:usesTool windis:CordlessDrill ;
+                           windis:connectionLocation "Jamb" ;
+                           windis:coverage "Local" ;
+                           windis:mechanismType "ScrewBolt" ;
+                           windis:reversibility "Reversible" ;
+                           rdfs:label "Conn — Bracket_A2 to Frame (screws)"@en .
+
+
+###  http://example.org/windis#C_BracketA2_ToWall
+windis:C_BracketA2_ToWall rdf:type owl:NamedIndividual ,
+                                   windis:Connection ;
+                          windis:basePartWall windis:WO1 ;
+                          windis:fastenedPart windis:Bracket_A2 ;
+                          windis:usesTool windis:CordlessDrill ;
+                          windis:connectionLocation "Jamb" ;
+                          windis:coverage "Local" ;
+                          windis:mechanismType "AnchorPlug" ;
+                          windis:reversibility "Reversible" ;
+                          rdfs:label "Conn — Bracket_A2 to Wall (anchor)"@en .
+
+
+###  http://example.org/windis#C_BracketB1_ToFrame
+windis:C_BracketB1_ToFrame rdf:type owl:NamedIndividual ,
+                                    windis:Connection ;
+                           windis:basePartComponent windis:Frame2 ;
+                           windis:fastenedPart windis:Bracket_B1 ;
+                           windis:usesTool windis:TorxDriver ;
+                           windis:connectionLocation "Jamb" ;
+                           windis:coverage "Local" ;
+                           windis:mechanismType "ScrewBolt" ;
+                           windis:reversibility "Reversible" ;
+                           rdfs:label "Conn — Bracket_B1 to Frame (screws)"@en .
+
+
+###  http://example.org/windis#C_BracketB1_ToWall
+windis:C_BracketB1_ToWall rdf:type owl:NamedIndividual ,
+                                   windis:Connection ;
+                          windis:basePartWall windis:WO2 ;
+                          windis:fastenedPart windis:Bracket_B1 ;
+                          windis:usesTool windis:TorxDriver ;
+                          windis:connectionLocation "Jamb" ;
+                          windis:coverage "Local" ;
+                          windis:mechanismType "AnchorPlug" ;
+                          windis:reversibility "Reversible" ;
+                          rdfs:label "Conn — Bracket_B1 to Wall (anchor)"@en .
+
+
+###  http://example.org/windis#C_BracketB2_ToFrame
+windis:C_BracketB2_ToFrame rdf:type owl:NamedIndividual ,
+                                    windis:Connection ;
+                           windis:basePartComponent windis:Frame2 ;
+                           windis:fastenedPart windis:Bracket_B2 ;
+                           windis:usesTool windis:TorxDriver ;
+                           windis:connectionLocation "Head" ;
+                           windis:coverage "Local" ;
+                           windis:mechanismType "ScrewBolt" ;
+                           windis:reversibility "Reversible" ;
+                           rdfs:label "Conn — Bracket_B2 to Frame (screws)"@en .
+
+
+###  http://example.org/windis#C_BracketB2_ToWall
+windis:C_BracketB2_ToWall rdf:type owl:NamedIndividual ,
+                                   windis:Connection ;
+                          windis:basePartWall windis:WO2 ;
+                          windis:fastenedPart windis:Bracket_B2 ;
+                          windis:usesTool windis:TorxDriver ;
+                          windis:connectionLocation "Head" ;
+                          windis:coverage "Local" ;
+                          windis:mechanismType "AnchorPlug" ;
+                          windis:reversibility "Reversible" ;
+                          rdfs:label "Conn — Bracket_B2 to Wall (anchor)"@en .
+
+
+###  http://example.org/windis#C_Frame2FoamToWall
+windis:C_Frame2FoamToWall rdf:type owl:NamedIndividual ,
+                                   windis:Connection ;
+                          windis:basePartWall windis:WO2 ;
+                          windis:fastenedPart windis:Frame2 ;
+                          windis:usesTool windis:OscillatingSaw ;
+                          windis:coverage "Perimeter" ;
+                          windis:mechanismType "ExpandingFoamBond" ;
+                          windis:residueRisk "High" ;
+                          windis:reversibility "Destructive" ;
+                          rdfs:label "Conn — Frame to Wall (perimeter foam bond)"@en .
+
+
+###  http://example.org/windis#C_FrameFoamToWall
+windis:C_FrameFoamToWall rdf:type owl:NamedIndividual ,
+                                  windis:Connection ;
+                         windis:basePartWall windis:WO1 ;
+                         windis:fastenedPart windis:Frame1 ;
+                         windis:usesTool windis:OscillatingSaw ;
+                         windis:coverage "Perimeter" ;
+                         windis:mechanismType "ExpandingFoamBond" ;
+                         windis:residueRisk "High" ;
+                         windis:reversibility "Destructive" ;
+                         rdfs:label "Conn — Frame to Wall (perimeter foam bond)"@en .
+
+
+###  http://example.org/windis#C_GlassToSash
+windis:C_GlassToSash rdf:type owl:NamedIndividual ,
+                              windis:Connection ;
+                     windis:basePartComponent windis:Sash1 ;
+                     windis:fastenedPart windis:IGU1 ;
+                     windis:usesTool windis:SuctionCups ,
+                                     windis:UtilityKnife ;
+                     windis:accessSide "Inside" ;
+                     windis:coverage "Perimeter" ;
+                     windis:mechanismType "GasketCompression" ;
+                     windis:residueRisk "Low" ;
+                     windis:reversibility "Semi" ;
+                     rdfs:label "Conn — IGU to Sash (gasket/putty)"@en .
+
+
+###  http://example.org/windis#C_HingeB1_ToFrame
+windis:C_HingeB1_ToFrame rdf:type owl:NamedIndividual ,
+                                  windis:Connection ;
+                         windis:basePartComponent windis:Frame2 ;
+                         windis:fastenedPart windis:Hinge_B1 ;
+                         windis:usesTool windis:TorxDriver ;
+                         windis:accessSide "Inside" ;
+                         windis:coverage "Local" ;
+                         windis:mechanismType "ScrewBolt" ;
+                         windis:reversibility "Reversible" ;
+                         rdfs:label "Conn — Hinge_B1 to Frame (screws)"@en .
+
+
+###  http://example.org/windis#C_HingeB1_ToSash
+windis:C_HingeB1_ToSash rdf:type owl:NamedIndividual ,
+                                 windis:Connection ;
+                        windis:basePartComponent windis:Sash2 ;
+                        windis:fastenedPart windis:Hinge_B1 ;
+                        windis:usesTool windis:TorxDriver ;
+                        windis:accessSide "Inside" ;
+                        windis:coverage "Local" ;
+                        windis:mechanismType "ScrewBolt" ;
+                        windis:reversibility "Reversible" ;
+                        rdfs:label "Conn — Hinge_B1 to Sash (screws)"@en .
+
+
+###  http://example.org/windis#C_HingeToFrame
+windis:C_HingeToFrame rdf:type owl:NamedIndividual ,
+                               windis:Connection ;
+                      windis:basePartComponent windis:Frame1 ;
+                      windis:fastenedPart windis:Hinge_A1 ;
+                      windis:usesTool windis:CordlessDrill ;
+                      windis:accessSide "Inside" ;
+                      windis:coverage "Local" ;
+                      windis:mechanismType "ScrewBolt" ;
+                      windis:reversibility "Reversible" ;
+                      rdfs:label "Conn — Hinge to Frame (screws)"@en .
+
+
+###  http://example.org/windis#C_HingeToSash
+windis:C_HingeToSash rdf:type owl:NamedIndividual ,
+                              windis:Connection ;
+                     windis:basePartComponent windis:Sash1 ;
+                     windis:fastenedPart windis:Hinge_A1 ;
+                     windis:usesTool windis:CordlessDrill ;
+                     windis:accessSide "Inside" ;
+                     windis:coverage "Local" ;
+                     windis:mechanismType "ScrewBolt" ;
+                     windis:reversibility "Reversible" ;
+                     rdfs:label "Conn — Hinge to Sash (screws)"@en .
+
+
+###  http://example.org/windis#C_VIGToSash_2
+windis:C_VIGToSash_2 rdf:type owl:NamedIndividual ,
+                              windis:Connection ;
+                     windis:basePartComponent windis:Sash2 ;
+                     windis:fastenedPart windis:VIG1 ;
+                     windis:usesTool windis:SealantCutter ,
+                                     windis:SuctionCups ;
+                     windis:accessSide "Outside" ;
+                     windis:coverage "Perimeter" ;
+                     windis:mechanismType "StructuralSiliconeBond" ;
+                     windis:residueRisk "Low" ;
+                     windis:reversibility "Semi" ;
+                     rdfs:label "Conn — VIG to Sash (structural silicone)"@en .
+
+
+###  http://example.org/windis#CordlessDrill
+windis:CordlessDrill rdf:type owl:NamedIndividual ,
+                              windis:ProcessTool ;
+                     rdfs:label "Cordless drill/driver"@en .
+
+
+###  http://example.org/windis#FA1
+windis:FA1 rdf:type owl:NamedIndividual ,
+                    windis:FenestrationAssembly ;
+           windis:hasDisassemblyPlan windis:Plan1 ;
+           windis:installedIn windis:WO1 ;
+           windis:airPermeabilityClass "3" ;
+           windis:coverSide "Outside" ;
+           windis:hasCoverOverlap "true"^^xsd:boolean ;
+           windis:watertightnessClass "7A" ;
+           rdfs:label "FA1 — timber IGU, interior beads"@en .
+
+
+###  http://example.org/windis#FA2
+windis:FA2 rdf:type owl:NamedIndividual ,
+                    windis:FenestrationAssembly ;
+           windis:hasDisassemblyPlan windis:Plan2 ;
+           windis:installedIn windis:WO2 ;
+           windis:airPermeabilityClass "4" ;
+           windis:coverSide "Inside" ;
+           windis:hasCoverOverlap "true"^^xsd:boolean ;
+           windis:watertightnessClass "E" ;
+           rdfs:label "FA2 — aluminum Vacuum IGU, exterior beads"@en .
+
+
+###  http://example.org/windis#Frame1
+windis:Frame1 rdf:type owl:NamedIndividual ,
+                       windis:Frame ;
+              windis:hasAssessment windis:CA_Frame1 ;
+              windis:partOf windis:FA1 ;
+              windis:finishType "Paint" ;
+              windis:hazardousOverall "true"^^xsd:boolean ;
+              windis:materialKind "Timber" ;
+              windis:substancesPresent "Lead" ;
+              rdfs:label "Frame1 — timber"@en .
+
+
+###  http://example.org/windis#Frame2
+windis:Frame2 rdf:type owl:NamedIndividual ,
+                       windis:Frame ;
+              windis:hasAssessment windis:CA_Frame2 ;
+              windis:partOf windis:FA2 ;
+              windis:finishType "Anodized" ;
+              windis:materialKind "Aluminum" ;
+              rdfs:label "Frame2 — aluminum"@en .
+
+
+###  http://example.org/windis#Gasket1
+windis:Gasket1 rdf:type owl:NamedIndividual ,
+                        windis:WedgeGasket ;
+               windis:partOf windis:FA1 ;
+               windis:materialKind "PVC" ;
+               rdfs:label "Gasket1 — wedge gasket"@en .
+
+
+###  http://example.org/windis#Gasket2
+windis:Gasket2 rdf:type owl:NamedIndividual ,
+                        windis:WedgeGasket ;
+               windis:partOf windis:FA2 ;
+               windis:materialKind "PVC" ;
+               rdfs:label "Gasket2 — wedge gasket"@en .
+
+
+###  http://example.org/windis#Hinge_A1
+windis:Hinge_A1 rdf:type owl:NamedIndividual ,
+                         windis:Hinge ;
+                windis:partOf windis:FA1 ;
+                rdfs:label "Hinge_A1"@en .
+
+
+###  http://example.org/windis#Hinge_B1
+windis:Hinge_B1 rdf:type owl:NamedIndividual ,
+                         windis:Hinge ;
+                windis:partOf windis:FA2 ;
+                rdfs:label "Hinge_B1"@en .
+
+
+###  http://example.org/windis#IGU1
+windis:IGU1 rdf:type owl:NamedIndividual ,
+                     windis:InsulatingGlazingUnit ;
+            windis:hasAssessment windis:CA_IGU1 ;
+            windis:partOf windis:FA1 ;
+            windis:fillKind "Argon" ;
+            windis:isServiceableAsUnit "true"^^xsd:boolean ;
+            rdfs:label "IGU1 — argon IGU"@en .
+
+
+###  http://example.org/windis#OscillatingSaw
+windis:OscillatingSaw rdf:type owl:NamedIndividual ,
+                               windis:ProcessTool ;
+                      rdfs:label "Oscillating saw"@en .
+
+
+###  http://example.org/windis#Plan1
+windis:Plan1 rdf:type owl:NamedIndividual ,
+                      windis:DisassemblyPlan ;
+             windis:hasStep windis:Step1 ,
+                            windis:Step2 ,
+                            windis:Step3 ,
+                            windis:Step4 ;
+             rdfs:label "Plan1 — interior access sequence"@en .
+
+
+###  http://example.org/windis#Plan2
+windis:Plan2 rdf:type owl:NamedIndividual ,
+                      windis:DisassemblyPlan ;
+             windis:hasStep windis:Step1_2 ,
+                            windis:Step2_2 ,
+                            windis:Step3_2 ,
+                            windis:Step4_2 ;
+             rdfs:label "Plan2 — exterior access sequence"@en .
+
+
+###  http://example.org/windis#RSL_Frame1
+windis:RSL_Frame1 rdf:type owl:NamedIndividual ,
+                           windis:ResidualServiceLifeAttribute ;
+                  windis:hasUnit "years" ;
+                  windis:hasValue 8.0 ;
+                  windis:observedAt "2025-09-13T10:00:00"^^xsd:dateTime ;
+                  windis:observedBy "Surveyor A" .
+
+
+###  http://example.org/windis#RSL_Frame2
+windis:RSL_Frame2 rdf:type owl:NamedIndividual ,
+                           windis:ResidualServiceLifeAttribute ;
+                  windis:hasUnit "years" ;
+                  windis:hasValue 20.0 ;
+                  windis:observedAt "2025-09-13T11:00:00"^^xsd:dateTime ;
+                  windis:observedBy "Surveyor B" .
+
+
+###  http://example.org/windis#RSL_IGU1
+windis:RSL_IGU1 rdf:type owl:NamedIndividual ,
+                         windis:ResidualServiceLifeAttribute ;
+                windis:hasUnit "years" ;
+                windis:hasValue 5.0 ;
+                windis:observedAt "2025-09-13T10:10:00"^^xsd:dateTime ;
+                windis:observedBy "Surveyor A" .
+
+
+###  http://example.org/windis#RSL_VIG1
+windis:RSL_VIG1 rdf:type owl:NamedIndividual ,
+                         windis:ResidualServiceLifeAttribute ;
+                windis:hasUnit "years" ;
+                windis:hasValue 12.0 ;
+                windis:observedAt "2025-09-13T11:05:00"^^xsd:dateTime ;
+                windis:observedBy "Surveyor B" .
+
+
+###  http://example.org/windis#Sash1
+windis:Sash1 rdf:type owl:NamedIndividual ,
+                      windis:Sash ;
+             windis:partOf windis:FA1 ;
+             windis:finishType "Paint" ;
+             windis:materialKind "Timber" ;
+             rdfs:label "Sash1 — timber"@en .
+
+
+###  http://example.org/windis#Sash2
+windis:Sash2 rdf:type owl:NamedIndividual ,
+                      windis:Sash ;
+             windis:partOf windis:FA2 ;
+             windis:finishType "Anodized" ;
+             windis:materialKind "Aluminum" ;
+             rdfs:label "Sash2 — aluminum"@en .
+
+
+###  http://example.org/windis#Screw_A1
+windis:Screw_A1 rdf:type owl:NamedIndividual ,
+                         windis:ScrewBolt ;
+                windis:partOf windis:FA1 ;
+                rdfs:label "Screw_A1 (hinge screws)"@en .
+
+
+###  http://example.org/windis#Screw_B1
+windis:Screw_B1 rdf:type owl:NamedIndividual ,
+                         windis:ScrewBolt ;
+                windis:partOf windis:FA2 ;
+                rdfs:label "Screw_B1 (bracket screws)"@en .
+
+
+###  http://example.org/windis#SealantCutter
+windis:SealantCutter rdf:type owl:NamedIndividual ,
+                              windis:ProcessTool ;
+                     rdfs:label "Sealant cutter"@en .
+
+
+###  http://example.org/windis#Step1
+windis:Step1 rdf:type owl:NamedIndividual ,
+                      windis:RemoveBead ;
+             windis:targetsConnection windis:C_BeadToSash ;
+             windis:usesTool windis:BeadLifter ;
+             rdfs:label "Step1 — Remove interior beads"@en .
+
+
+###  http://example.org/windis#Step1_2
+windis:Step1_2 rdf:type owl:NamedIndividual ,
+                        windis:RemoveBead ;
+               windis:targetsConnection windis:C_BeadClip_ToBead ;
+               windis:usesTool windis:TorxDriver ;
+               rdfs:label "Step1_2 — Release bead clips"@en .
+
+
+###  http://example.org/windis#Step2
+windis:Step2 rdf:type owl:NamedIndividual ,
+                      windis:RemoveGlazing ;
+             windis:hasPrecondition windis:Step1 ;
+             windis:targetsComponent windis:IGU1 ;
+             windis:usesTool windis:SuctionCups ,
+                             windis:UtilityKnife ;
+             rdfs:label "Step2 — Remove IGU"@en .
+
+
+###  http://example.org/windis#Step2_2
+windis:Step2_2 rdf:type owl:NamedIndividual ,
+                        windis:RemoveGlazing ;
+               windis:hasPrecondition windis:Step1_2 ;
+               windis:targetsConnection windis:C_VIGToSash_2 ;
+               windis:usesTool windis:SealantCutter ,
+                               windis:SuctionCups ;
+               rdfs:label "Step2_2 — Release VIG (cut silicone)"@en .
+
+
+###  http://example.org/windis#Step3
+windis:Step3 rdf:type owl:NamedIndividual ,
+                      windis:DetachSash ;
+             windis:hasPrecondition windis:Step2 ;
+             windis:targetsConnection windis:C_HingeToSash ;
+             windis:usesTool windis:CordlessDrill ;
+             rdfs:label "Step3 — Detach sash (remove hinge screws)"@en .
+
+
+###  http://example.org/windis#Step3_2
+windis:Step3_2 rdf:type owl:NamedIndividual ,
+                        windis:DetachSash ;
+               windis:hasPrecondition windis:Step2_2 ;
+               windis:targetsConnection windis:C_HingeB1_ToSash ;
+               windis:usesTool windis:TorxDriver ;
+               rdfs:label "Step3_2 — Detach sash (remove hinge screws)"@en .
+
+
+###  http://example.org/windis#Step4
+windis:Step4 rdf:type owl:NamedIndividual ,
+                      windis:ExtractFrame ;
+             windis:hasPrecondition windis:Step3 ;
+             windis:targetsConnection windis:C_FrameFoamToWall ;
+             windis:usesTool windis:OscillatingSaw ;
+             rdfs:label "Step4 — Extract frame (cut foam)"@en .
+
+
+###  http://example.org/windis#Step4_2
+windis:Step4_2 rdf:type owl:NamedIndividual ,
+                        windis:ExtractFrame ;
+               windis:hasPrecondition windis:Step3_2 ;
+               windis:targetsConnection windis:C_Frame2FoamToWall ;
+               windis:usesTool windis:OscillatingSaw ;
+               rdfs:label "Step4_2 — Extract frame (cut foam)"@en .
+
+
+###  http://example.org/windis#SuctionCups
+windis:SuctionCups rdf:type owl:NamedIndividual ,
+                            windis:ProcessTool ;
+                   rdfs:label "Suction cups"@en .
+
+
+###  http://example.org/windis#TorxDriver
+windis:TorxDriver rdf:type owl:NamedIndividual ,
+                           windis:ProcessTool ;
+                  rdfs:label "Torx driver"@en .
+
+
+###  http://example.org/windis#UtilityKnife
+windis:UtilityKnife rdf:type owl:NamedIndividual ,
+                             windis:ProcessTool ;
+                    rdfs:label "Utility knife"@en .
+
+
+###  http://example.org/windis#VIG1
+windis:VIG1 rdf:type owl:NamedIndividual ,
+                     windis:VacuumIGU ;
+            windis:hasAssessment windis:CA_VIG1 ;
+            windis:partOf windis:FA2 ;
+            windis:fillKind "Vacuum" ;
+            windis:isServiceableAsUnit "true"^^xsd:boolean ;
+            rdfs:label "VIG1 — vacuum IGU"@en .
+
+
+###  http://example.org/windis#WO1
+windis:WO1 rdf:type owl:NamedIndividual ,
+                    windis:WallOpening ;
+           windis:exposureClass "Moderate" ;
+           windis:exteriorAccess "Scaffold" ;
+           windis:exteriorReturnPresent "false"^^xsd:boolean ;
+           windis:interiorAccess "true"^^xsd:boolean ;
+           windis:interiorReturnPresent "true"^^xsd:boolean ;
+           windis:lintelPresent "true"^^xsd:boolean ;
+           windis:orientation "South" ;
+           windis:storey 2 ;
+           rdfs:label "WO1 — wall opening (south, 2F)"@en .
+
+
+###  http://example.org/windis#WO2
+windis:WO2 rdf:type owl:NamedIndividual ,
+                    windis:WallOpening ;
+           windis:exposureClass "High wind zone" ;
+           windis:exteriorAccess "Cherry picker" ;
+           windis:exteriorReturnPresent "true"^^xsd:boolean ;
+           windis:interiorAccess "true"^^xsd:boolean ;
+           windis:interiorReturnPresent "false"^^xsd:boolean ;
+           windis:lintelPresent "true"^^xsd:boolean ;
+           windis:orientation "West" ;
+           windis:storey 5 ;
+           rdfs:label "WO2 — wall opening (west, 5F)"@en .
+
+
+#################################################################
 #    General axioms
 #################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( windis:AnchorPlug
+                windis:BeadClip
+                windis:Bracket
+                windis:Handle
+                windis:Hinge
+                windis:LockKeep
+                windis:ScrewBolt
+                windis:StayRestrictor
+              )
+] .
+
 
 [ rdf:type owl:AllDisjointClasses ;
   owl:members ( windis:Attribute
@@ -870,6 +1615,15 @@ windis:WidthAttribute rdf:type owl:Class ;
                 windis:ProcessConstraint
                 windis:ProcessTool
                 windis:WallOpening
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( windis:FrameSystem
+                windis:GlazingSystem
+                windis:Hardware
+                windis:RetentionAndSealSystem
               )
 ] .
 
