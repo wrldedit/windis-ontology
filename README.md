@@ -12,53 +12,6 @@ WinDis models window components, their connections, and disassembly steps for re
 
 ## Class Hierarchy (overview)
 
-owl:Thing
-├─ PhysicalElement
-│ ├─ FenestrationAssembly
-│ ├─ Component
-│ │ ├─ FrameSystem
-│ │ │ ├─ Frame
-│ │ │ ├─ Subframe
-│ │ │ └─ Sash
-│ │ ├─ GlazingSystem
-│ │ │ ├─ SingleGlazingUnit
-│ │ │ ├─ InsulatingGlazingUnit
-│ │ │ └─ VacuumIGU
-│ │ └─ RetentionAndSealSystem
-│ │ ├─ Bead
-│ │ ├─ Gasket
-│ │ │ ├─ SettingBlock
-│ │ │ └─ WedgeGasket
-│ │ ├─ GlazingCompound
-│ │ └─ Weatherseal
-│ └─ WallOpening
-│
-├─ Connection
-│
-├─ ProcessModel
-│ ├─ DisassemblyPlan
-│ ├─ DisassemblyStep
-│ │ ├─ RemoveBead
-│ │ ├─ RemoveGlazing
-│ │ ├─ DetachSash
-│ │ ├─ ReleaseBracketOrScrew
-│ │ ├─ CutPerimeterFoam
-│ │ └─ ExtractFrame
-│ ├─ ProcessTool
-│ └─ ProcessConstraint
-│
-├─ Other
-│ ├─ ConditionAssessment
-│ ├─ EndOfLifeOption
-│ └─ ReuseBarrier
-│
-└─ Attribute
-├─ WidthAttribute
-├─ HeightAttribute
-├─ ThicknessAttribute
-├─ UValueAttribute
-├─ DurometerAttribute
-└─ ResidualServiceLifeAttribute
 
 ## How to open in Protégé
 1. File → Open → `windis.ttl`
